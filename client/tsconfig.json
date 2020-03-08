@@ -9,5 +9,9 @@
     "allowJs": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "resources"
+  ]
 }

@@ -2,11 +2,18 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using SignalRChat.Hubs;
 
 namespace server
 {
     public class Startup
     {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSignalR();
+        }
+
         public void Configure(IConfiguration configuration, IApplicationBuilder app, IWebHostEnvironment environment)
         {
             if (environment.IsDevelopment())
@@ -36,6 +43,12 @@ namespace server
         {
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/chatHub");
+            });
         }
     }
 }
