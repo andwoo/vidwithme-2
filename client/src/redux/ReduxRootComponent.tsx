@@ -3,20 +3,23 @@ import { bindActionCreators } from 'redux';
 import { Provider, connect } from 'react-redux';
 
 //store
-import store, { StoreDispatch, StoreModel } from './Store';
+import store from './Store';
+import * as StoreModels from './interfaces/StoreModels';
 //actions
-import * as TestActions from './actions/TestAction';
+import * as UserActions from './actions/UserActions';
+import * as RoomActions from './actions/RoomActions';
 
 import App from '../App';
 
-function MapStateToProps(state: StoreModel): StoreModel {
+function MapStateToProps(state: StoreModels.StoreModel): StoreModels.StoreModel {
   return {
-    testObject: state.testObject,
+    user: state.user,
+    room: state.room,
   };
 }
 
-function MapDispatchToProps(dispatch): StoreDispatch {
-  return bindActionCreators({ ...TestActions }, dispatch);
+function MapDispatchToProps(dispatch): StoreModels.StoreDispatch {
+  return bindActionCreators({...UserActions, ...RoomActions}, dispatch);
 }
 
 const ReduxPropsBinder = connect(MapStateToProps, MapDispatchToProps)(App);

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
-import testReducerMethod from './TestReducer';
+import userReducer from './UserReducer';
+import roomReducer from './RoomReducer';
 
-const CombinedReducers = combineReducers({ testObject: testReducerMethod });
+const CombinedReducers = combineReducers({ user: userReducer, room: roomReducer });
 
 export default CombinedReducers;

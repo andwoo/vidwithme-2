@@ -1,30 +1,25 @@
-import { createStore, compose } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import CombinedReducers from './reducers/index';
-
-export interface TestObject {
-  name: string;
-}
-
-export interface StoreDispatch {
-  TestAction(name: string);
-}
-
-export interface StoreModel {
-  testObject: TestObject;
-}
+import * as StoreModels from './interfaces/StoreModels';
 
 //combined interface for easy include in React Components
-export interface Store extends StoreDispatch, StoreModel {}
+export interface Store extends StoreModels.StoreDispatch, StoreModels.StoreModel {}
 
-const defaultModel: StoreModel = {
-  testObject: {
-    name: '',
+const defaultModel: StoreModels.StoreModel = {
+  user: {
+    userName: ''
+  },
+  room: {
+    id: '',
+    chat: []
   },
 };
 
 /* eslint-disable */
-const enhancers = compose(window['devToolsExtension'] ? window['devToolsExtension']() : f => f);
-const store = createStore(CombinedReducers, defaultModel, enhancers);
+const middlewareEnhancer = applyMiddleware(thunk);
+const composedEnhancers = compose(middlewareEnhancer, window['devToolsExtension'] ? window['devToolsExtension']() : f => f);
+const store = createStore(CombinedReducers, defaultModel, composedEnhancers);
 /* eslint-enable */
 
 if (module['hot']) {

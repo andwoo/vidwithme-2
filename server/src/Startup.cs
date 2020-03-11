@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using SignalRChat.Hubs;
+using VidWithMe.Hub;
 
 namespace server
 {
@@ -47,7 +47,7 @@ namespace server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chatHub");
+                endpoints.MapHub<LobbyHub>("/lobby");
             });
         }
     }

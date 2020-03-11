@@ -1,7 +1,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Nanoid
+namespace VidWithMe.Utils
 {
     /// <inheritdoc />
     /// <summary>
