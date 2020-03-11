@@ -7,6 +7,9 @@ import * as StoreModels from './interfaces/StoreModels';
 export interface Store extends StoreModels.StoreDispatch, StoreModels.StoreModel {}
 
 const defaultModel: StoreModels.StoreModel = {
+  connection: {
+    isConnected: false
+  },
   user: {
     userName: ''
   },

@@ -1,4 +1,7 @@
 const ActionTypes = {
+  //CONNECTION
+  CONNECTED: "CONNECTED",
+
   //USER
   SET_USER: "SET_USER",
 

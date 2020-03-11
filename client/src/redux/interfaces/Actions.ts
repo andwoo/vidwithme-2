@@ -4,6 +4,10 @@ export interface BaseAction {
   type: string;
 }
 
+export interface ConnectionAction extends BaseAction {
+  connected: boolean;
+}
+
 export interface UserAction extends BaseAction {
   userName: string;
 }

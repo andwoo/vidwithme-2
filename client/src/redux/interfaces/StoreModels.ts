@@ -2,8 +2,13 @@ import * as Actions from './Actions';
 import * as StoreModels from './StoreModels';
 
 export interface StoreModel {
+  connection: ConnectionState,
   user: UserState,
   room: RoomState
+}
+
+export interface ConnectionState {
+  isConnected: boolean;
 }
 
 export interface UserState {
@@ -21,6 +26,7 @@ export interface ChatMessage {
 }
 
 export interface StoreDispatch {
+  connectToServer: () => void;
   setUser: (userName: string) => Actions.UserAction;
   createRoom: (user : UserState) => void;
   joinRoom: (user : UserState, id : string) => void;

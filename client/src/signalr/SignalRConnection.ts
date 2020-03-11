@@ -7,8 +7,17 @@ class Connection {
     this.m_Connection = new signalR.HubConnectionBuilder().withUrl('/lobby').build();
   }
 
-  connect() {
-    this.m_Connection.start().catch(error => console.error(`SignaR error: ${error}`));
+  async connect() : Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.m_Connection.start()
+      .then(() => {
+        resolve();
+      }).catch((error) => {
+        console.error(`SignaR error: ${error}`);
+        reject();
+      });
+    });
+    
   }
 
   registerEvent(methodName: string, newMethod: (...args: any[]) => void): void {

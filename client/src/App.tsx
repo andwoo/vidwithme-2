@@ -18,7 +18,6 @@ class App extends React.Component<Store> {
   }
 
   componentDidMount() {
-    SignalRConnection.connect();
     SignalRConnection.registerEvent('receiveChatMessage', (user : StoreModels.UserState, message : string) => {
       this.props.receivedChatMessage({
         message: message, 
@@ -27,9 +26,18 @@ class App extends React.Component<Store> {
     });
 
     this.props.setUser(Date.now().toString());
+    this.props.connectToServer();
   }
 
-  render(): JSX.Element {
+  renderConnecting = () => {
+    return (
+      <div>
+        <h2>Connecting</h2>
+      </div>
+    );
+  }
+
+  renderApp = () => {
     return (
       <BrowserRouter>
         <Switch>
@@ -42,6 +50,10 @@ class App extends React.Component<Store> {
         </Switch>
       </BrowserRouter>
     );
+  }
+
+  render(): JSX.Element {
+    return this.props.connection.isConnected ? this.renderApp() : this.renderConnecting();
   }
 }
 
