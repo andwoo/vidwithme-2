@@ -19,3 +19,7 @@ export interface RoomAction extends BaseAction {
 export interface ChatMessageAction extends BaseAction {
   message : StoreModels.ChatMessage
 }
+
+export interface RoomStateAction extends BaseAction {
+  roomState : StoreModels.RoomState
+}

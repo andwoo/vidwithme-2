@@ -18,11 +18,16 @@ export interface UserState {
 export interface RoomState {
   id: string;
   chat: Array<ChatMessage>;
+  playlist: Array<PlaylistItem>;
 }
 
 export interface ChatMessage {
   user : UserState;
   message: string;
+}
+
+export interface PlaylistItem {
+  url: string;
 }
 
 export interface StoreDispatch {

@@ -54,7 +54,16 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
     );
   }
 
+  renderRoomState = () => {
+    return (
+      <React.Fragment>
+        {this.props.room.playlist.map((value : StoreModels.PlaylistItem, index : number) => <p key={index}>{value.url}</p>)}
+      </React.Fragment>
+    );
+  }
+
   renderChat = () => {
+    console.dir(this.props.room);
     return (
       <React.Fragment>
         <label>
@@ -75,6 +84,7 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
       <div>
         <p>{`RoomID - ${this.props.room.id}`}</p>
         {!this.isIdValid(this.props.room.id) && this.renderJoinRoom()}
+        {this.isIdValid(this.props.room.id) && this.renderRoomState()}
         {this.isIdValid(this.props.room.id) && this.renderChat()}
       </div>
     )

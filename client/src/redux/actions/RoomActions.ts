@@ -33,6 +33,26 @@ const joinRoomAsync = async (dispatch, user : StoreModels.UserState, targetId : 
   });
 }
 
+const getRoomStateAsync = async (dispatch, id : string) : Promise<void> => {
+  return new Promise((resolve) => {
+    SignalRConnection.registerEvent('roomStateReceived', (roomState : StoreModels.RoomState) => {
+      SignalRConnection.unregisterEvent('roomStateReceived');
+      dispatch({
+        type: ActionTypes.ROOM_STATE_RECEIVED,
+        roomState: roomState
+      });
+      resolve();
+    });
+
+    SignalRConnection.sendEvent('getRoomState', id);
+  });
+}
+
+const joinRoomSequenceAsync = async (dispatch, user : StoreModels.UserState, id : string) : Promise<void> => {
+  await joinRoomAsync(dispatch, user, id);
+  await getRoomStateAsync(dispatch, id);
+}
+
 const sendChatMessageAsync = async (dispatch, message : StoreModels.ChatMessage, id : string) : Promise<void> => {
   dispatch(receivedChatMessage(message));
   SignalRConnection.sendEvent('SendChatMessage', message.user, message.message, id)
@@ -47,7 +67,7 @@ export function createRoom(user : StoreModels.UserState) {
 
 export function joinRoom(user : StoreModels.UserState, id : string) {
   return (dispatch) : void => {
-    joinRoomAsync(dispatch, user, id);
+    joinRoomSequenceAsync(dispatch, user, id);
   }
 }
 
@@ -61,5 +81,11 @@ export function receivedChatMessage(message : StoreModels.ChatMessage) : Actions
   return {
     type: ActionTypes.RECEIVED_CHAT_MESSAGE,
     message: message
+  }
+}
+
+export function getRoomState(id : string) {
+  return (dispatch) : void => {
+    getRoomStateAsync(dispatch, id);
   }
 }

@@ -18,7 +18,7 @@ class App extends React.Component<Store> {
   }
 
   componentDidMount() {
-    SignalRConnection.registerEvent('receiveChatMessage', (user : StoreModels.UserState, message : string) => {
+    SignalRConnection.registerEvent('chatMessageReceived', (user : StoreModels.UserState, message : string) => {
       this.props.receivedChatMessage({
         message: message, 
         user: user

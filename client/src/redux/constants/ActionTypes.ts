@@ -8,6 +8,7 @@ const ActionTypes = {
   //ROOM
   JOIN_ROOM: "JOIN_ROOM",
   RECEIVED_CHAT_MESSAGE: "RECEIVE_CHAT_MESSAGE",
+  ROOM_STATE_RECEIVED: "ROOM_STATE_RECEIVED"
 };
 
 export default ActionTypes;

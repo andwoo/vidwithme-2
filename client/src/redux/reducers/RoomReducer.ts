@@ -10,6 +10,9 @@ function roomReducer(state: RoomState, action: Actions.BaseAction) {
   else if(action.type === ActionTypes.RECEIVED_CHAT_MESSAGE) {
     nextState.chat.push((action as Actions.ChatMessageAction).message);
   }
+  else if(action.type === ActionTypes.ROOM_STATE_RECEIVED) {
+    nextState.playlist = (action as Actions.RoomStateAction).roomState.playlist;
+  }
   return nextState;
 }
 

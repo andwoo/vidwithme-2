@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using VidWithMe.Room;
 using VidWithMe.User;
@@ -30,7 +31,7 @@ namespace VidWithMe.Hub
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
       await Clients.Caller.JoinedRoom(id);
-      await Clients.GroupExcept(id, Context.ConnectionId).ReceiveChatMessage(user, "Has created the room.");
+      await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, "Has created the room.");
     }
 
     public async Task JoinRoom(UserData user, string id)
@@ -40,13 +41,24 @@ namespace VidWithMe.Hub
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
       await Clients.Caller.JoinedRoom(id);
-      await Clients.GroupExcept(id, Context.ConnectionId).ReceiveChatMessage(user, "Has joined the room.");
+      await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, "Has joined the room.");
+    }
+
+    public async Task getRoomState(string id)
+    {
+      PlaylistItem item = new PlaylistItem();
+      item.Url = "https://www.youtube.com/watch?v=_fiKPLXYttw";
+
+      RoomState roomState = new RoomState();
+      roomState.Playlist = new List<PlaylistItem>(){item};
+
+      await Clients.Caller.RoomStateReceived(roomState);
     }
 
     public async Task SendChatMessage(UserData user, string message, string id)
     {
       SetUserDataOnUser(user);
-      await Clients.GroupExcept(id, Context.ConnectionId).ReceiveChatMessage(user, message);
+      await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, message);
     }
 
     public void SetUserDataOnUser(UserData user)
@@ -71,6 +83,7 @@ namespace VidWithMe.Hub
   public interface ILobbyClient
   {
     Task JoinedRoom(string id);
-    Task ReceiveChatMessage(UserData user, string message);
+    Task ChatMessageReceived(UserData user, string message);
+    Task RoomStateReceived(RoomState roomState);
   }
 }

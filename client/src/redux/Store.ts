@@ -15,7 +15,8 @@ const defaultModel: StoreModels.StoreModel = {
   },
   room: {
     id: '',
-    chat: []
+    chat: [],
+    playlist: []
   },
 };
 
