@@ -11,6 +11,7 @@ namespace server
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddSignalR();
         }
 
@@ -48,6 +49,7 @@ namespace server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<LobbyHub>("/lobby");
+                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }

@@ -26,6 +26,7 @@ namespace VidWithMe.Hub
     {
       SetUserDataOnUser(user);
       string id = RoomID.GenerateRoomID();
+      //check if already in a room and leave it
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
       await Clients.Caller.JoinedRoom(id);
@@ -35,6 +36,7 @@ namespace VidWithMe.Hub
     public async Task JoinRoom(UserData user, string id)
     {
       SetUserDataOnUser(user);
+      //check if already in a room and leave it
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
       await Clients.Caller.JoinedRoom(id);
