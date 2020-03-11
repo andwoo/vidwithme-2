@@ -8,12 +8,7 @@ import * as StoreModels from './redux/interfaces/StoreModels';
 import Home from './pages/Home';
 import Video from './pages/Video';
 
-interface TestState {
-  roomIdInput: string;
-  chatInput: string;
-}
-
-class App extends React.Component<Store, TestState> {
+class App extends React.Component<Store> {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,21 +27,6 @@ class App extends React.Component<Store, TestState> {
     });
 
     this.props.setUser(Date.now().toString());
-  }
-
-  onCreateRoomPressed() : void {
-    this.props.createRoom(this.props.user);
-  }
-
-  onJoinRoomPressed(): void {
-    this.props.joinRoom(this.props.user, this.state.roomIdInput);
-  }
-
-  onSendChatMessagePressed(): void {
-    this.props.sendChatMessage({
-      message: this.state.chatInput,
-      user: this.props.user
-    }, this.props.room.id);
   }
 
   render(): JSX.Element {
