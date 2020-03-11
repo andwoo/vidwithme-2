@@ -63,7 +63,6 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   }
 
   renderChat = () => {
-    console.dir(this.props.room);
     return (
       <React.Fragment>
         <label>

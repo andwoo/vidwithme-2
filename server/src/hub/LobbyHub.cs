@@ -14,34 +14,37 @@ namespace VidWithMe.Hub
 
     public override async Task OnDisconnectedAsync(Exception exception)
     {
-      if(Context.Items.ContainsKey(KEY_ROOM_ID))
+      if(IsUserInRoom())
       {
         UserData user = Context.Items[KEY_USER_DATA] as UserData;
         string id = Context.Items[KEY_ROOM_ID] as string;
-        await SendChatMessage(user, "Left the room", id);
+        await LeaveRoom(user, id);
       }
       await base.OnDisconnectedAsync(exception);
     }
 
     public async Task CreateRoom(UserData user)
     {
-      SetUserDataOnUser(user);
-      string id = RoomID.GenerateRoomID();
-      //check if already in a room and leave it
-      await Groups.AddToGroupAsync(Context.ConnectionId, id);
-      SetRoomIdOnUser(id);
-      await Clients.Caller.JoinedRoom(id);
-      await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, "Has created the room.");
+      await JoinRoom(user, RoomID.GenerateRoomID());
     }
 
     public async Task JoinRoom(UserData user, string id)
     {
       SetUserDataOnUser(user);
-      //check if already in a room and leave it
+      await LeaveRoom(user, id);
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
       await Clients.Caller.JoinedRoom(id);
       await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, "Has joined the room.");
+    }
+
+    public async Task LeaveRoom(UserData user, string id)
+    {
+      if(IsUserInRoom())
+      {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, id);
+        await SendChatMessage(user, "Left the room", id);
+      }
     }
 
     public async Task getRoomState(string id)
@@ -72,11 +75,16 @@ namespace VidWithMe.Hub
 
     public void SetRoomIdOnUser(string id)
     {
-      if(Context.Items.ContainsKey(KEY_ROOM_ID))
+      if(IsUserInRoom())
       {
         Context.Items.Remove(KEY_ROOM_ID);
       }
       Context.Items.Add(KEY_ROOM_ID, id);
+    }
+
+    public bool IsUserInRoom()
+    {
+      return Context.Items.ContainsKey(KEY_ROOM_ID);
     }
   }
 
