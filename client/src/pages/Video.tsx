@@ -35,10 +35,7 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   }
 
   onSendChatMessagePressed(): void {
-    this.props.sendChatMessage({
-      message: this.state.chatInput,
-      user: this.props.connection.user
-    }, this.props.room.id);
+    this.props.sendChatMessage(this.state.chatInput);
   }
 
   renderJoinRoom = () => {

@@ -31,7 +31,6 @@ const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
   return new Promise((resolve, reject) => {
     SignalRConnection.registerEvent('joinedRoom', (success: boolean, id : string) => {
       SignalRConnection.unregisterEvent('joinedRoom');
-      console.log(`yuh - ${success} ${id}`)
       if(success) {
         dispatch({
           type: ActionTypes.JOIN_ROOM,
@@ -51,11 +50,10 @@ const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
   });
 }
 
-const getRoomStateAsync = async (dispatch, id : string) : Promise<void> => {
+const getRoomStateAsync = async (dispatch) : Promise<void> => {
   return new Promise((resolve, reject) => {
     SignalRConnection.registerEvent('roomStateReceived', (success: boolean, roomState : StoreModels.RoomState) => {
       SignalRConnection.unregisterEvent('roomStateReceived');
-      console.log(`yuh - success[${success}]`);
       if(success) {
         dispatch({
           type: ActionTypes.ROOM_STATE_RECEIVED,
@@ -71,26 +69,32 @@ const getRoomStateAsync = async (dispatch, id : string) : Promise<void> => {
       }
     });
 
-    SignalRConnection.sendEvent('getRoomState', id);
+    SignalRConnection.sendEvent('getRoomState');
   });
+}
+
+const createRoomSequenceAsync = async (dispatch) : Promise<void> => {
+  try {
+    await createRoomAsync(dispatch);
+    await getRoomStateAsync(dispatch);
+  } catch(error) {}
 }
 
 const joinRoomSequenceAsync = async (dispatch, id : string) : Promise<void> => {
   try {
     await joinRoomAsync(dispatch, id);
-    await getRoomStateAsync(dispatch, id);
+    await getRoomStateAsync(dispatch);
   } catch(error) {}
 }
 
-const sendChatMessageAsync = async (dispatch, message : StoreModels.ChatMessage, id : string) : Promise<void> => {
-  dispatch(receivedChatMessage(message));
-  SignalRConnection.sendEvent('SendChatMessage', message.user, message.message, id)
+const sendChatMessageAsync = async (dispatch, message : string) : Promise<void> => {
+  SignalRConnection.sendEvent('SendChatMessage', message);
   Promise.resolve();
 }
 
 export function createRoom() {
   return (dispatch) : void => {
-    createRoomAsync(dispatch).catch((error) => {});
+    createRoomSequenceAsync(dispatch).catch((error) => {});
   };
 }
 
@@ -100,9 +104,15 @@ export function joinRoom(id : string) {
   }
 }
 
-export function sendChatMessage(message : StoreModels.ChatMessage, id : string) {
+export function getRoomState() {
   return (dispatch) : void => {
-    sendChatMessageAsync(dispatch, message, id);
+    getRoomStateAsync(dispatch);
+  }
+}
+
+export function sendChatMessage(message : string) {
+  return (dispatch) : void => {
+    sendChatMessageAsync(dispatch, message);
   }
 }
 
@@ -110,12 +120,6 @@ export function receivedChatMessage(message : StoreModels.ChatMessage) : Actions
   return {
     type: ActionTypes.RECEIVED_CHAT_MESSAGE,
     message: message
-  }
-}
-
-export function getRoomState(id : string) {
-  return (dispatch) : void => {
-    getRoomStateAsync(dispatch, id);
   }
 }
 

@@ -3,14 +3,14 @@ import SignalRConnection from '../../signalr/SignalRConnection';
 import * as StoreModels from '../interfaces/StoreModels';
 import * as RoomActions from './RoomActions';
 
-const setUserDataAsync = async (dispatch, user : StoreModels.UserState) : Promise<void> => {
+const setUserDataAsync = async (dispatch, inUser : StoreModels.UserState) : Promise<void> => {
   return new Promise((resolve, reject) => {
-    SignalRConnection.registerEvent('userDataSet', (success: boolean) => {
+    SignalRConnection.registerEvent('userDataSet', (success: boolean, outUser : StoreModels.UserState) => {
       SignalRConnection.unregisterEvent('userDataSet');
       if(success) {
         dispatch({
           type: ActionTypes.USER_DATA_SET,
-          user: user
+          user: outUser
         });
         resolve();
       } else {
@@ -22,7 +22,7 @@ const setUserDataAsync = async (dispatch, user : StoreModels.UserState) : Promis
       }
     });
 
-    SignalRConnection.sendEvent('setUserData', user);
+    SignalRConnection.sendEvent('setUserData', inUser);
   })
 }
 

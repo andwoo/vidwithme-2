@@ -2,11 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace VidWithMe.Controllers
 {
-    public class HomeController : Controller
+  public class HomeController : Controller
+  {
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return File("~/index.html", "text/html");
-        }
+      return File("~/index.html", "text/html");
     }
+  }
 }

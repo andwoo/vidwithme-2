@@ -9,6 +9,7 @@ function roomReducer(state: RoomState, action: Actions.BaseAction) {
   } else if(action.type === ActionTypes.RECEIVED_CHAT_MESSAGE) {
     nextState.chat.push((action as Actions.ChatMessageAction).message);
   } else if(action.type === ActionTypes.ROOM_STATE_RECEIVED) {
+    nextState.id = (action as Actions.RoomStateAction).roomState.id;
     nextState.playlist = (action as Actions.RoomStateAction).roomState.playlist;
   } else if(action.type === ActionTypes.ROOM_ERROR) {
     nextState.errors.push((action as Actions.RoomErrorAction).error);

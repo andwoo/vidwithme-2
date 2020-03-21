@@ -42,6 +42,7 @@ export interface StoreDispatch {
   setUserData: (user : StoreModels.UserState) => void;
   createRoom: () => void;
   joinRoom: (id : string) => void;
-  sendChatMessage: (message : StoreModels.ChatMessage, id : string) => void;
+  getRoomState: () => void;
+  sendChatMessage: (message : string) => void;
   receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction
 }
