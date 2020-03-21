@@ -3,12 +3,13 @@ import * as StoreModels from './StoreModels';
 
 export interface StoreModel {
   connection: ConnectionState,
-  user: UserState,
   room: RoomState
 }
 
 export interface ConnectionState {
   isConnected: boolean;
+  isUserDataSet: boolean;
+  user: UserState;
 }
 
 export interface UserState {
@@ -19,6 +20,12 @@ export interface RoomState {
   id: string;
   chat: Array<ChatMessage>;
   playlist: Array<PlaylistItem>;
+  errors: Array<RoomError>;
+}
+
+export interface RoomError {
+  title: string;
+  description: string;
 }
 
 export interface ChatMessage {
@@ -32,9 +39,9 @@ export interface PlaylistItem {
 
 export interface StoreDispatch {
   connectToServer: () => void;
-  setUser: (userName: string) => Actions.UserAction;
-  createRoom: (user : UserState) => void;
-  joinRoom: (user : UserState, id : string) => void;
+  setUserData: (user : StoreModels.UserState) => void;
+  createRoom: () => void;
+  joinRoom: (id : string) => void;
   sendChatMessage: (message : StoreModels.ChatMessage, id : string) => void;
   receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction
 }

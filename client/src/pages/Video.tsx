@@ -22,7 +22,7 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   }
   componentDidMount() {
     if(!this.isIdValid(this.props.room.id) && this.isIdValid(this.props.roomId)) {
-      this.props.joinRoom(this.props.user, this.props.roomId);
+      this.props.joinRoom(this.props.roomId);
     }
   }
 
@@ -31,13 +31,13 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   }
 
   onJoinRoomPressed(): void {
-    this.props.joinRoom(this.props.user, this.state.roomIdInput);
+    this.props.joinRoom(this.state.roomIdInput);
   }
 
   onSendChatMessagePressed(): void {
     this.props.sendChatMessage({
       message: this.state.chatInput,
-      user: this.props.user
+      user: this.props.connection.user
     }, this.props.room.id);
   }
 

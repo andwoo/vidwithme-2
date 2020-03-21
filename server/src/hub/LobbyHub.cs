@@ -16,33 +16,40 @@ namespace VidWithMe.Hub
     {
       if(IsUserInRoom())
       {
-        UserData user = Context.Items[KEY_USER_DATA] as UserData;
         string id = Context.Items[KEY_ROOM_ID] as string;
-        await LeaveRoom(user, id);
+        await LeaveRoom(id);
       }
       await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task CreateRoom(UserData user)
-    {
-      await JoinRoom(user, RoomID.GenerateRoomID());
-    }
-
-    public async Task JoinRoom(UserData user, string id)
+    public async Task SetUserData(UserData user)
     {
       SetUserDataOnUser(user);
-      await LeaveRoom(user, id);
+      await Clients.Caller.UserDataSet(true);
+    }
+
+    public async Task CreateRoom()
+    {
+      await JoinRoom(RoomID.GenerateRoomID());
+    }
+
+    public async Task JoinRoom(string id)
+    {
+      await LeaveRoom(id);
+      //check if room exists
       await Groups.AddToGroupAsync(Context.ConnectionId, id);
       SetRoomIdOnUser(id);
-      await Clients.Caller.JoinedRoom(id);
+      await Clients.Caller.JoinedRoom(true, id);
+      UserData user = Context.Items[KEY_USER_DATA] as UserData;
       await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(user, "Has joined the room.");
     }
 
-    public async Task LeaveRoom(UserData user, string id)
+    public async Task LeaveRoom(string id)
     {
       if(IsUserInRoom())
       {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, id);
+        UserData user = Context.Items[KEY_USER_DATA] as UserData;
         await SendChatMessage(user, "Left the room", id);
       }
     }
@@ -55,7 +62,8 @@ namespace VidWithMe.Hub
       RoomState roomState = new RoomState();
       roomState.Playlist = new List<PlaylistItem>(){item};
 
-      await Clients.Caller.RoomStateReceived(roomState);
+      //check if room exists
+      await Clients.Caller.RoomStateReceived(true, roomState);
     }
 
     public async Task SendChatMessage(UserData user, string message, string id)
@@ -90,8 +98,9 @@ namespace VidWithMe.Hub
 
   public interface ILobbyClient
   {
-    Task JoinedRoom(string id);
+    Task UserDataSet(bool success);
+    Task JoinedRoom(bool success, string id);
     Task ChatMessageReceived(UserData user, string message);
-    Task RoomStateReceived(RoomState roomState);
+    Task RoomStateReceived(bool success, RoomState roomState);
   }
 }

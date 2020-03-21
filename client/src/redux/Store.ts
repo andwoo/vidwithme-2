@@ -8,15 +8,17 @@ export interface Store extends StoreModels.StoreDispatch, StoreModels.StoreModel
 
 const defaultModel: StoreModels.StoreModel = {
   connection: {
-    isConnected: false
-  },
-  user: {
-    userName: ''
+    isConnected: false,
+    isUserDataSet: false,
+    user: {
+      userName: ''
+    }
   },
   room: {
     id: '',
     chat: [],
-    playlist: []
+    playlist: [],
+    errors: []
   },
 };
 

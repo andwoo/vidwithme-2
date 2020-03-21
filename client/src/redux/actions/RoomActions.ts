@@ -3,54 +3,83 @@ import * as Actions from '../interfaces/Actions';
 import * as StoreModels from '../interfaces/StoreModels';
 import SignalRConnection from '../../signalr/SignalRConnection';
 
-const createRoomAsync = async (dispatch, user : StoreModels.UserState) : Promise<void> => {
-  return new Promise((resolve) => {
-    SignalRConnection.registerEvent('joinedRoom', (id : string) => {
+const createRoomAsync = async (dispatch) : Promise<void> => {
+  return new Promise((resolve, reject) => {
+    SignalRConnection.registerEvent('joinedRoom', (success: boolean, id : string) => {
       SignalRConnection.unregisterEvent('joinedRoom');
-      dispatch({
-        type: ActionTypes.JOIN_ROOM,
-        id: id
-      });
-      resolve();
+
+      if(success) {
+        dispatch({
+          type: ActionTypes.JOIN_ROOM,
+          id: id
+        });
+        resolve();
+      } else {
+        dispatch(connectionError({
+          title: 'Failed To Create Room',
+          description: 'Room does not exist or has been closed.'
+        }));
+        reject();
+      }
     });
 
-    SignalRConnection.sendEvent('createRoom', user);
+    SignalRConnection.sendEvent('createRoom');
   });
 }
 
-const joinRoomAsync = async (dispatch, user : StoreModels.UserState, targetId : string) : Promise<void> => {
-  return new Promise((resolve) => {
-    SignalRConnection.registerEvent('joinedRoom', (id : string) => {
+const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
+  return new Promise((resolve, reject) => {
+    SignalRConnection.registerEvent('joinedRoom', (success: boolean, id : string) => {
       SignalRConnection.unregisterEvent('joinedRoom');
-      dispatch({
-        type: ActionTypes.JOIN_ROOM,
-        id: id
-      });
-      resolve();
+      console.log(`yuh - ${success} ${id}`)
+      if(success) {
+        dispatch({
+          type: ActionTypes.JOIN_ROOM,
+          id: id
+        });
+        resolve();
+      } else {
+        dispatch(connectionError({
+          title: 'Failed To Join Room',
+          description: 'Room does not exist or has been closed.'
+        }));
+        reject();
+      }
     });
 
-    SignalRConnection.sendEvent('joinRoom', user, targetId);
+    SignalRConnection.sendEvent('joinRoom', targetId);
   });
 }
 
 const getRoomStateAsync = async (dispatch, id : string) : Promise<void> => {
-  return new Promise((resolve) => {
-    SignalRConnection.registerEvent('roomStateReceived', (roomState : StoreModels.RoomState) => {
+  return new Promise((resolve, reject) => {
+    SignalRConnection.registerEvent('roomStateReceived', (success: boolean, roomState : StoreModels.RoomState) => {
       SignalRConnection.unregisterEvent('roomStateReceived');
-      dispatch({
-        type: ActionTypes.ROOM_STATE_RECEIVED,
-        roomState: roomState
-      });
-      resolve();
+      console.log(`yuh - success[${success}]`);
+      if(success) {
+        dispatch({
+          type: ActionTypes.ROOM_STATE_RECEIVED,
+          roomState: roomState
+        });
+        resolve();
+      } else {
+        dispatch(connectionError({
+          title: 'Failed To Get Room State',
+          description: 'Room does not exist or has been closed.'
+        }));
+        reject();
+      }
     });
 
     SignalRConnection.sendEvent('getRoomState', id);
   });
 }
 
-const joinRoomSequenceAsync = async (dispatch, user : StoreModels.UserState, id : string) : Promise<void> => {
-  await joinRoomAsync(dispatch, user, id);
-  await getRoomStateAsync(dispatch, id);
+const joinRoomSequenceAsync = async (dispatch, id : string) : Promise<void> => {
+  try {
+    await joinRoomAsync(dispatch, id);
+    await getRoomStateAsync(dispatch, id);
+  } catch(error) {}
 }
 
 const sendChatMessageAsync = async (dispatch, message : StoreModels.ChatMessage, id : string) : Promise<void> => {
@@ -59,15 +88,15 @@ const sendChatMessageAsync = async (dispatch, message : StoreModels.ChatMessage,
   Promise.resolve();
 }
 
-export function createRoom(user : StoreModels.UserState) {
+export function createRoom() {
   return (dispatch) : void => {
-    createRoomAsync(dispatch, user)
+    createRoomAsync(dispatch).catch((error) => {});
   };
 }
 
-export function joinRoom(user : StoreModels.UserState, id : string) {
+export function joinRoom(id : string) {
   return (dispatch) : void => {
-    joinRoomSequenceAsync(dispatch, user, id);
+    joinRoomSequenceAsync(dispatch, id);
   }
 }
 
@@ -87,5 +116,12 @@ export function receivedChatMessage(message : StoreModels.ChatMessage) : Actions
 export function getRoomState(id : string) {
   return (dispatch) : void => {
     getRoomStateAsync(dispatch, id);
+  }
+}
+
+export function connectionError(error: StoreModels.RoomError) : Actions.RoomErrorAction {
+  return {
+    type: ActionTypes.ROOM_ERROR,
+    error: error
   }
 }

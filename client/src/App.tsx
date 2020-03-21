@@ -25,8 +25,16 @@ class App extends React.Component<Store> {
       });
     });
 
-    this.props.setUser(Date.now().toString());
+    
     this.props.connectToServer();
+  }
+
+  componentDidUpdate(prevProps : Store) {
+    if(!prevProps.connection.isConnected && this.props.connection.isConnected) {
+      this.props.setUserData({
+        userName: Date.now().toString()
+      });
+    }
   }
 
   renderConnecting = () => {
@@ -39,21 +47,29 @@ class App extends React.Component<Store> {
 
   renderApp = () => {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/:room_id">
-            <Video {...this.props}/>
-          </Route>
-          <Route path="/">
-            <Home {...this.props}/>
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <div>
+        {this.props.room.errors.map((value: StoreModels.RoomError, index: number) => {
+          return (<div key={index}>
+            <h2>{value.title}</h2>
+            <h3>{value.description}</h3>
+          </div>)
+        })}
+        <BrowserRouter>
+          <Switch>
+            <Route path="/:room_id">
+              <Video {...this.props}/>
+            </Route>
+            <Route path="/">
+              <Home {...this.props}/>
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </div>
     );
   }
 
   render(): JSX.Element {
-    return this.props.connection.isConnected ? this.renderApp() : this.renderConnecting();
+    return this.props.connection.isConnected && this.props.connection.isUserDataSet ? this.renderApp() : this.renderConnecting();
   }
 }
 

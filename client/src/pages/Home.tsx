@@ -15,7 +15,7 @@ class HomeInternal extends React.Component<HomeProps> {
   }
 
   onCreateRoomPressed() : void {
-    this.props.createRoom(this.props.user);
+    this.props.createRoom();
   }
 
   render() {

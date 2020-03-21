@@ -8,6 +8,10 @@ export interface ConnectionAction extends BaseAction {
   connected: boolean;
 }
 
+export interface UserDataAction extends BaseAction {
+  user: StoreModels.UserState;
+}
+
 export interface UserAction extends BaseAction {
   userName: string;
 }
@@ -22,4 +26,8 @@ export interface ChatMessageAction extends BaseAction {
 
 export interface RoomStateAction extends BaseAction {
   roomState : StoreModels.RoomState
+}
+
+export interface RoomErrorAction extends BaseAction {
+  error: StoreModels.RoomError;
 }
