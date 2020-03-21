@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import SignalRConnection from './signalr/SignalRConnection';
 import { Store } from './redux/Store';
 import * as StoreModels from './redux/interfaces/StoreModels';
+import BasePage from './pages/BasePage';
 import Home from './pages/Home';
 import Video from './pages/Video';
 
@@ -24,7 +25,6 @@ class App extends React.Component<Store> {
         user: user
       });
     });
-
     
     this.props.connectToServer();
   }
@@ -47,13 +47,7 @@ class App extends React.Component<Store> {
 
   renderApp = () => {
     return (
-      <div>
-        {this.props.room.errors.map((value: StoreModels.RoomError, index: number) => {
-          return (<div key={index}>
-            <h2>{value.title}</h2>
-            <h3>{value.description}</h3>
-          </div>)
-        })}
+      <BasePage {...this.props}>
         <BrowserRouter>
           <Switch>
             <Route path="/:room_id">
@@ -64,7 +58,7 @@ class App extends React.Component<Store> {
             </Route>
           </Switch>
         </BrowserRouter>
-      </div>
+      </BasePage>
     );
   }
 
