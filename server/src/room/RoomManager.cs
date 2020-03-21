@@ -34,7 +34,9 @@ namespace VidWithMe.Room
 
     public static void LeaveRoom(string id)
     {
-      //logic to remove rooms when empty
+      if(ContainsRoom(id)) {
+        s_Rooms.Remove(id);
+      }
     }
   }
 }
