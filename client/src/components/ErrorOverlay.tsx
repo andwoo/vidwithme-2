@@ -17,16 +17,15 @@ export default class ErrorOverlay extends React.Component<ErrorOverlayProps> {
     return (
       <div className="modal" style={{display: "inline-flex"}}>
         <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">{this.props.title}</p>
-            <button className="delete" aria-label="close" onClick={this.handleOnClose}></button>
-          </header>
-          <section className="modal-card-body">
+        <article className="modal-card message is-danger">
+          <div className="message-header">
+            <p>{this.props.title}</p>
+            <button className="delete" aria-label="delete" onClick={this.handleOnClose}></button>
+          </div>
+          <div className="message-body">
             {this.props.description}
-          </section>
-          <footer className="modal-card-foot"></footer>
-        </div>
+          </div>
+        </article>
       </div>
     );
   }
