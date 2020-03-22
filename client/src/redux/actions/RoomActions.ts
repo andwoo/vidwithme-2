@@ -10,11 +10,14 @@ const createRoomAsync = async (dispatch) : Promise<void> => {
 
       if(success) {
         dispatch({
-          type: ActionTypes.JOIN_ROOM,
+          type: ActionTypes.JOIN_ROOM_SUCCESS,
           id: id
         });
         resolve();
       } else {
+        dispatch({
+          type: ActionTypes.JOIN_ROOM_FAILED
+        });
         dispatch(connectionError({
           title: 'Failed To Create Room',
           description: 'Room does not exist or has been closed.'
@@ -36,11 +39,14 @@ const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
       SignalRConnection.unregisterEvent('joinedRoom');
       if(success) {
         dispatch({
-          type: ActionTypes.JOIN_ROOM,
+          type: ActionTypes.JOIN_ROOM_SUCCESS,
           id: id
         });
         resolve();
       } else {
+        dispatch({
+          type: ActionTypes.JOIN_ROOM_FAILED
+        });
         dispatch(connectionError({
           title: 'Failed To Join Room',
           description: 'Room does not exist or has been closed.'

@@ -8,9 +8,12 @@ function connectionReducer(state: ConnectionState, action: Actions.BaseAction) {
     nextState.isConnected = (action as Actions.ConnectionAction).connected;
   } else if(action.type === ActionTypes.USER_DATA_IN_PROGRESS) {
     nextState.isUserDataSettingInProgress = true;
-  } else if(action.type === ActionTypes.USER_DATA_SET) {
+  } else if(action.type === ActionTypes.USER_DATA_SUCCESS) {
     nextState.user = (action as Actions.UserDataAction).user;
     nextState.isUserDataSet = true;
+    nextState.isUserDataSettingInProgress = false;
+  } else if(action.type === ActionTypes.USER_DATA_FAILED) {
+    nextState.isUserDataSet = false;
     nextState.isUserDataSettingInProgress = false;
   }
   return nextState;

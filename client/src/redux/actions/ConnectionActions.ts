@@ -9,14 +9,17 @@ const setUserDataAsync = async (dispatch, inUser : StoreModels.UserState) : Prom
       SignalRConnection.unregisterEvent('userDataSet');
       if(success) {
         dispatch({
-          type: ActionTypes.USER_DATA_SET,
+          type: ActionTypes.USER_DATA_SUCCESS,
           user: outUser
         });
         resolve();
       } else {
+        dispatch({
+          type: ActionTypes.USER_DATA_FAILED
+        });
         dispatch(RoomActions.connectionError({
           title: 'Failed To Set User Data',
-          description: 'Failed for unknown reasons.'
+          description: 'Invalid user name'
         }));
         reject();
       }

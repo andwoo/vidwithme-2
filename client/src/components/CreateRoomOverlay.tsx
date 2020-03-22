@@ -11,7 +11,7 @@ interface CreateRoomOverlayState {
   isUsernameValid: boolean;
 }
 
-export default class CreateRoomOverlay extends React.PureComponent<CreateRoomOverlayProps, CreateRoomOverlayState> {
+export default class CreateRoomOverlay extends React.Component<CreateRoomOverlayProps, CreateRoomOverlayState> {
   private usernameInputRef: React.RefObject<UsernameTextInput>;
   
   constructor(props) {
@@ -47,6 +47,10 @@ export default class CreateRoomOverlay extends React.PureComponent<CreateRoomOve
     const isInProgress = !this.props.connection.isConnected || 
                           this.props.connection.isUserDataSettingInProgress || 
                           this.props.room.isJoiningInProgress;
+
+                          console.log(`this.props.connection.isConnected ${this.props.connection.isConnected}`);
+                          console.log(`this.props.connection.isUserDataSettingInProgress ${this.props.connection.isUserDataSettingInProgress}`);
+                          console.log(`this.props.room.isJoiningInProgress ${this.props.room.isJoiningInProgress}`);
 
     return (
       <GenericOverlay

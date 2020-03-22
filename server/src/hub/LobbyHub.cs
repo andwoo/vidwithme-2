@@ -10,6 +10,7 @@ namespace VidWithMe.Hub
   {
     static readonly string KEY_USER_DATA = "user_data";
     static readonly string KEY_ROOM_ID = "room_id";
+    static readonly int MAX_CHARACTERS = 12;
 
     private UserData ContextUserData
     {
@@ -49,8 +50,16 @@ namespace VidWithMe.Hub
 
     public async Task SetUserData(UserData user)
     {
-      ContextUserData = user;
-      await Clients.Caller.UserDataSet(true);
+      if(string.IsNullOrEmpty(user.UserName) || user.UserName.Length >= MAX_CHARACTERS)
+      {
+        await Clients.Caller.UserDataSet(false);
+      }
+      else
+      {
+        user.UserName = user.UserName.Replace(' ', '_');
+        ContextUserData = user;
+        await Clients.Caller.UserDataSet(true);
+      }
     }
 
     public async Task CreateRoom()

@@ -8,8 +8,10 @@ function roomReducer(state: RoomState, action: Actions.BaseAction) {
     nextState.redirect_id = (action as Actions.RoomAction).id;
   } else if(action.type === ActionTypes.JOIN_ROOM_IN_PROGRESS) {
     nextState.isJoiningInProgress = true;
-  } else if(action.type === ActionTypes.JOIN_ROOM) {
+  } else if(action.type === ActionTypes.JOIN_ROOM_SUCCESS) {
     nextState.id = (action as Actions.RoomAction).id;
+    nextState.isJoiningInProgress = false;
+  } else if(action.type === ActionTypes.JOIN_ROOM_FAILED) {
     nextState.isJoiningInProgress = false;
   } else if(action.type === ActionTypes.RECEIVED_CHAT_MESSAGE) {
     nextState.chat.push((action as Actions.ChatMessageAction).message);

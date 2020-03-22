@@ -12,7 +12,7 @@ interface JoinRoomOverlayState {
   isUsernameValid: boolean;
 }
 
-export default class JoinRoomOverlay extends React.PureComponent<JoinRoomOverlayProps, JoinRoomOverlayState> {
+export default class JoinRoomOverlay extends React.Component<JoinRoomOverlayProps, JoinRoomOverlayState> {
   private usernameInputRef: React.RefObject<UsernameTextInput>;
   
   constructor(props) {
