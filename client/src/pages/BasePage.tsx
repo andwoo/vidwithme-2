@@ -16,7 +16,7 @@ export default class BasePage extends React.Component<Store> {
             <div className="column is-full">
               <Navbar {...this.props}/>
             </div>
-            <div className="column is-full content">
+            <div className="column is-full has-background-light content">
               {this.props.children}
             </div>
           </div>

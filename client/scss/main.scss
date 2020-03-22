@@ -2,6 +2,9 @@
 
 @import "../node_modules/bulma/bulma";
 
+$navbarHeight: 3rem;
+$navbarItemPadding: 1rem;
+
 .root {
   height: 100vh;
 }
@@ -13,14 +16,30 @@
 
 .sidebar {
   height: 100%;
+}
 
-  .navbar {
-    background-color: red;
-    height: 3rem;
+.navbar {
+  height: $navbarHeight;
+
+  .navbar--left {
+    align-self: center;
+    .logo {
+      height: calc(#{$navbarHeight} - #{$navbarItemPadding});
+      width: auto;
+      padding-left: $navbarItemPadding;
+      padding-top: calc(#{$navbarItemPadding} / 2);
+    }
   }
 
-  .content {
-    background-color: blueviolet;
-    height: calc(100vh - 3rem);
+  .navbar--right {
+    align-self: center;
+    
+    .roomId {
+      padding-right: $navbarItemPadding
+    }
   }
+}
+
+.content {
+  height: calc(100vh - #{$navbarHeight});
 }
