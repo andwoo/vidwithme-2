@@ -1,6 +1,7 @@
 import * as React from 'react';
 import GenericOverlay from './GenericOverlay';
 import { Store } from '../redux/Store';
+import JoinRoomOverlay from './JoinRoomOverlay'
 
 interface EntryOverlayState {
   userName: string;
@@ -35,16 +36,6 @@ export default class EntryOverlay extends React.Component<Store, EntryOverlaySta
       event.preventDefault();
     }
     this.setState({inProgress: true, isCreatingRoom: true});
-    this.props.setUserData({
-      userName: this.state.userName
-    });
-  }
-
-  handleOnJoinRoom = (event) => {
-    if(event) {
-      event.preventDefault();
-    }
-    this.setState({inProgress: true, isCreatingRoom: false});
     this.props.setUserData({
       userName: this.state.userName
     });
@@ -108,26 +99,13 @@ export default class EntryOverlay extends React.Component<Store, EntryOverlaySta
           <div className={`control ${this.getIsLoadingClassName()}`}>
             <button className="button is-success" onClick={this.handleOnCreateRoom}>Create Room</button>
           </div>
-          <div className={`control ${this.getIsLoadingClassName()}`}>
-            <button className="button is-success is-outlined" onClick={this.handleOnJoinRoom}>Join Room</button>
-          </div>
         </div>
       </form>
     )
   }
 
   renderJoinRoomForm = () => {
-    return (
-      <form onSubmit={this.handleOnJoinRoom}>
-        {this.renderUserDataForm()}
-
-        <div className="field is-grouped">
-          <div className={`control ${this.getIsLoadingClassName()}`}>
-            <button className="button is-success" onClick={this.handleOnJoinRedirectRoom}>Join Room</button>
-          </div>
-        </div>
-      </form>
-    )
+    return <JoinRoomOverlay roomId={this.props.room.redirect_id} {...this.props}/>
   }
 
   composeWithDisable = (child) => {
@@ -144,7 +122,7 @@ export default class EntryOverlay extends React.Component<Store, EntryOverlaySta
         overlayType="success"
         title={"Create Or Join Room"}
         showCloseButton={false}>
-          {this.isCreateRoomRequested() ? this.composeWithDisable(this.renderCreateOrJoinRoomForm()) : this.composeWithDisable(this.renderJoinRoomForm())}
+          {this.isCreateRoomRequested() ? this.composeWithDisable(this.renderCreateOrJoinRoomForm()) : this.renderJoinRoomForm()}
       </GenericOverlay>
     );
   }
