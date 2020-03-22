@@ -11,8 +11,12 @@ function roomReducer(state: RoomState, action: Actions.BaseAction) {
   } else if(action.type === ActionTypes.ROOM_STATE_RECEIVED) {
     nextState.id = (action as Actions.RoomStateAction).roomState.id;
     nextState.playlist = (action as Actions.RoomStateAction).roomState.playlist;
-  } else if(action.type === ActionTypes.ROOM_ERROR) {
+  } else if(action.type === ActionTypes.CONNECTION_ERROR) {
     nextState.errors.push((action as Actions.RoomErrorAction).error);
+  } else if(action.type === ActionTypes.POP_CONNECTION_ERROR) {
+    if(nextState.errors.length > 0) {
+      nextState.errors.shift();
+    }
   }
   return nextState;
 }

@@ -125,7 +125,13 @@ export function receivedChatMessage(message : StoreModels.ChatMessage) : Actions
 
 export function connectionError(error: StoreModels.RoomError) : Actions.RoomErrorAction {
   return {
-    type: ActionTypes.ROOM_ERROR,
+    type: ActionTypes.CONNECTION_ERROR,
     error: error
+  }
+}
+
+export function popConnectionError() : Actions.BaseAction {
+  return {
+    type: ActionTypes.POP_CONNECTION_ERROR
   }
 }

@@ -44,5 +44,6 @@ export interface StoreDispatch {
   joinRoom: (id : string) => void;
   getRoomState: () => void;
   sendChatMessage: (message : string) => void;
-  receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction
+  receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction;
+  popConnectionError: () => Actions.BaseAction
 }

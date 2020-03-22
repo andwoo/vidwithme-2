@@ -40,24 +40,27 @@ class App extends React.Component<Store> {
 
   render(): JSX.Element {
     const showContent: boolean = this.props.connection.isConnected && this.props.connection.isUserDataSet;
+    const connectionError: StoreModels.RoomError = this.props.room.errors.length > 0 ? this.props.room.errors[0] : null;
+    const errorOverlay: JSX.Element = connectionError ? <ErrorOverlay {...connectionError} onClose={this.props.popConnectionError}/> : null;
+    
     return (
-      <BasePage {...this.props}>
-        {this.props.room.errors.map((value: StoreModels.RoomError, index: number) => {
-          return <ErrorOverlay key={index} {...value}/>
-        })}
-        { showContent && 
-          <BrowserRouter>
-            <Switch>
-              <Route path="/:room_id">
-                <Video {...this.props}/>
-              </Route>
-              <Route path="/">
-                <Home {...this.props}/>
-              </Route>
-            </Switch>
-          </BrowserRouter>
-        }
-      </BasePage>
+      <React.Fragment>
+        <BasePage {...this.props}>
+          { showContent && 
+            <BrowserRouter>
+              <Switch>
+                <Route path="/:room_id">
+                  <Video {...this.props}/>
+                </Route>
+                <Route path="/">
+                  <Home {...this.props}/>
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          }
+        </BasePage>
+      {errorOverlay}
+      </React.Fragment>
     );
   }
 }
