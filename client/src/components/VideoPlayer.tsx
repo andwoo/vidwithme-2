@@ -6,9 +6,12 @@ export default class VideoPlayer extends React.Component<Store> {
   render () {
     let url : string = this.props.room.playlist.length > 0 ? this.props.room.playlist[0].url : '';
     return (
-      <div>
-        <ReactPlayer url={url} playing={true} />
-      </div>
+      <ReactPlayer
+        url={url}
+        playing={true}
+        width="100%"
+        height="100%"
+      />
     );
   }
 }

@@ -8,6 +8,7 @@ import * as StoreModels from './redux/interfaces/StoreModels';
 import BasePage from './pages/BasePage';
 import Home from './pages/Home';
 import Video from './pages/Video';
+import ErrorOverlay from './components/ErrorOverlay';
 
 class App extends React.Component<Store> {
   constructor(props) {
@@ -37,33 +38,27 @@ class App extends React.Component<Store> {
     }
   }
 
-  renderConnecting = () => {
-    return (
-      <div>
-        <h2>Connecting</h2>
-      </div>
-    );
-  }
-
-  renderApp = () => {
+  render(): JSX.Element {
+    const showContent: boolean = this.props.connection.isConnected && this.props.connection.isUserDataSet;
     return (
       <BasePage {...this.props}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/:room_id">
-              <Video {...this.props}/>
-            </Route>
-            <Route path="/">
-              <Home {...this.props}/>
-            </Route>
-          </Switch>
-        </BrowserRouter>
+        {this.props.room.errors.map((value: StoreModels.RoomError, index: number) => {
+          return <ErrorOverlay key={index} {...value}/>
+        })}
+        { showContent && 
+          <BrowserRouter>
+            <Switch>
+              <Route path="/:room_id">
+                <Video {...this.props}/>
+              </Route>
+              <Route path="/">
+                <Home {...this.props}/>
+              </Route>
+            </Switch>
+          </BrowserRouter>
+        }
       </BasePage>
     );
-  }
-
-  render(): JSX.Element {
-    return this.props.connection.isConnected && this.props.connection.isUserDataSet ? this.renderApp() : this.renderConnecting();
   }
 }
 
