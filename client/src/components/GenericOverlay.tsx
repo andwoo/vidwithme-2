@@ -4,14 +4,10 @@ interface GenericOverlayProps {
   overlayType: string; //dark, primary, link, info, success, warning, danger, 
   title: string;
   showCloseButton: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-export default class GenericOverlay extends React.Component<GenericOverlayProps> {
-  constructor(props) {
-    super(props);
-    console.dir(props);
-  }
+export default class GenericOverlay extends React.PureComponent<GenericOverlayProps> {
   handleOnClose = () => {
     this.props.onClose && this.props.onClose();
   }

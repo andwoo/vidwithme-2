@@ -22,6 +22,9 @@ const setUserDataAsync = async (dispatch, inUser : StoreModels.UserState) : Prom
       }
     });
 
+    dispatch({
+      type: ActionTypes.USER_DATA_IN_PROGRESS
+    });
     SignalRConnection.sendEvent('setUserData', inUser);
   })
 }

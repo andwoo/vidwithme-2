@@ -8,6 +8,7 @@ export interface StoreModel {
 
 export interface ConnectionState {
   isConnected: boolean;
+  isUserDataSettingInProgress: boolean;
   isUserDataSet: boolean;
   user: UserState;
 }
@@ -17,7 +18,9 @@ export interface UserState {
 }
 
 export interface RoomState {
+  redirect_id: string;
   id: string;
+  isJoiningInProgress: boolean;
   chat: Array<ChatMessage>;
   playlist: Array<PlaylistItem>;
   errors: Array<RoomError>;
@@ -40,6 +43,7 @@ export interface PlaylistItem {
 export interface StoreDispatch {
   connectToServer: () => void;
   setUserData: (user : StoreModels.UserState) => void;
+  setRedirectRoomId: (redirectId : string) => Actions.RoomAction;
   createRoom: () => void;
   joinRoom: (id : string) => void;
   getRoomState: () => void;

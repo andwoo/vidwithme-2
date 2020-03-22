@@ -6,7 +6,7 @@ interface ErrorOverlayProps extends StoreModels.RoomError {
   onClose: () => void;
 }
 
-export default class ErrorOverlay extends React.Component<ErrorOverlayProps> {
+export default class ErrorOverlay extends React.PureComponent<ErrorOverlayProps> {
   handleOnClose = () => {
     this.props.onClose && this.props.onClose();
   }

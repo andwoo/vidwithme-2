@@ -23,6 +23,9 @@ const createRoomAsync = async (dispatch) : Promise<void> => {
       }
     });
 
+    dispatch({
+      type: ActionTypes.JOIN_ROOM_IN_PROGRESS
+    });
     SignalRConnection.sendEvent('createRoom');
   });
 }
@@ -46,6 +49,9 @@ const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
       }
     });
 
+    dispatch({
+      type: ActionTypes.JOIN_ROOM_IN_PROGRESS
+    });
     SignalRConnection.sendEvent('joinRoom', targetId);
   });
 }
@@ -90,6 +96,13 @@ const joinRoomSequenceAsync = async (dispatch, id : string) : Promise<void> => {
 const sendChatMessageAsync = async (dispatch, message : string) : Promise<void> => {
   SignalRConnection.sendEvent('SendChatMessage', message);
   Promise.resolve();
+}
+
+export function setRedirectRoomId(redirectId : string) : Actions.RoomAction {
+  return {
+    type: ActionTypes.SET_REDIRECT_ROOM_ID,
+    id: redirectId
+  }
 }
 
 export function createRoom() {

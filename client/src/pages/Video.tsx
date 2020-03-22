@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useParams } from "react-router-dom";
 import { Store } from '../redux/Store';
 import * as StoreModels from '../redux/interfaces/StoreModels';
+import SignalRConnection from '../signalr/SignalRConnection';
 
 interface VideoProps extends Store {
   roomId: string;
 }
 
 interface VideoState {
-  roomIdInput: string;
   chatInput: string;
 }
 
@@ -16,39 +16,33 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   constructor(props) {
     super(props);
     this.state = {
-      roomIdInput: this.props.roomId,
       chatInput: ''
     }
   }
   componentDidMount() {
-    if(!this.isIdValid(this.props.room.id) && this.isIdValid(this.props.roomId)) {
-      this.props.joinRoom(this.props.roomId);
-    }
+    SignalRConnection.registerEvent('chatMessageReceived', this.handleOnChatMessageReceived);
+    this.props.setRedirectRoomId(this.props.roomId);
   }
 
-  isIdValid = (id) => {
-    return id && id.length > 0;
+  componentWillUnmount() {
+    SignalRConnection.unregisterEvent('chatMessageReceived');
   }
 
-  onJoinRoomPressed(): void {
-    this.props.joinRoom(this.state.roomIdInput);
+  handleOnChatMessageReceived = (user : StoreModels.UserState, message : string) => {
+    this.props.receivedChatMessage({
+      message: message, 
+      user: user
+    });
+  }
+
+  isInRoom = () => {
+    return this.props.connection.isConnected &&
+    this.props.connection.isUserDataSet &&
+    this.props.room.id && this.props.room.id.length > 0;
   }
 
   onSendChatMessagePressed(): void {
     this.props.sendChatMessage(this.state.chatInput);
-  }
-
-  renderJoinRoom = () => {
-    return (
-      <React.Fragment>
-        <label>
-          Room id:
-          <input type="text" value={this.state.roomIdInput} onChange={(event) => this.setState(   {roomIdInput: event.target.value})} />
-          </label>
-          <button className="button" onClick={(): void => this.onJoinRoomPressed()}>Join Room</button>
-        <br/>
-      </React.Fragment>
-    );
   }
 
   renderRoomState = () => {
@@ -78,10 +72,8 @@ class VideoInternal extends React.Component<VideoProps, VideoState> {
   render() {
     return (
       <div>
-        <p>{`RoomID - ${this.props.room.id}`}</p>
-        {!this.isIdValid(this.props.room.id) && this.renderJoinRoom()}
-        {this.isIdValid(this.props.room.id) && this.renderRoomState()}
-        {this.isIdValid(this.props.room.id) && this.renderChat()}
+        {this.isInRoom() && this.renderRoomState()}
+        {this.isInRoom() && this.renderChat()}
       </div>
     )
   }

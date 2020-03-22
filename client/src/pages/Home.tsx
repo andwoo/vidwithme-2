@@ -9,22 +9,14 @@ interface HomeProps extends Store {
 class HomeInternal extends React.Component<HomeProps> {
   componentDidUpdate(prevProps : Store) {
     if(this.props.room.id !== prevProps.room.id && (this.props.room.id && this.props.room.id.length > 0)) {
-      //we have joined a room
       this.props.history.push(`/${this.props.room.id}`);
     }
-  }
-
-  onCreateRoomPressed() : void {
-    this.props.createRoom();
   }
 
   render() {
     return (
       <div>
         <p>HOME</p>
-        <button className="button" onClick={(): void => this.onCreateRoomPressed()}>
-          Create Room
-        </button>
         <br/>
       </div>
     )

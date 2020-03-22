@@ -10,12 +10,15 @@ const defaultModel: StoreModels.StoreModel = {
   connection: {
     isConnected: false,
     isUserDataSet: false,
+    isUserDataSettingInProgress: false,
     user: {
       userName: ''
     }
   },
   room: {
+    redirect_id: '',
     id: '',
+    isJoiningInProgress: false,
     chat: [],
     playlist: [],
     errors: []
