@@ -11,13 +11,6 @@ export default class EntryOverlay extends React.Component<Store> {
   }
 
   render() {
-    return (
-      <GenericOverlay
-        overlayType="success"
-        title={"Create Or Join Room"}
-        showCloseButton={false}>
-          {this.isCreateRoomRequested() ? <CreateRoomOverlay {...this.props}/> : <JoinRoomOverlay roomId={this.props.room.redirect_id} {...this.props}/>}
-      </GenericOverlay>
-    );
+    return this.isCreateRoomRequested() ? <CreateRoomOverlay {...this.props}/> : <JoinRoomOverlay roomId={this.props.room.redirect_id} {...this.props}/>;
   }
 }

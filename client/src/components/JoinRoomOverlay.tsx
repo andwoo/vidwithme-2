@@ -9,21 +9,18 @@ interface JoinRoomOverlayProps extends Store {
 
 interface JoinRoomOverlayState {
   userName: string;
-  inProgress: boolean;
-  isValid: boolean;
+  isUsernameValid: boolean;
 }
 
 export default class JoinRoomOverlay extends React.PureComponent<JoinRoomOverlayProps, JoinRoomOverlayState> {
-
-  private textInputRef: React.RefObject<UsernameTextInput>;
+  private usernameInputRef: React.RefObject<UsernameTextInput>;
   
   constructor(props) {
     super(props);
-    this.textInputRef = React.createRef();
+    this.usernameInputRef = React.createRef();
     this.state = {
-      inProgress: false,
       userName: '',
-      isValid: false
+      isUsernameValid: false
     }
   }
 
@@ -37,30 +34,32 @@ export default class JoinRoomOverlay extends React.PureComponent<JoinRoomOverlay
     if(event) {
       event.preventDefault();
     }
-    this.setState({inProgress: true}, () => {
-      this.props.setUserData({ userName: this.state.userName });
-    });
+    this.props.setUserData({ userName: this.state.userName });
   }
 
   handleOnUserNameChange = (value : string) => {
     this.setState({
       userName: value,
-      isValid: this.textInputRef.current.isValid()
+      isUsernameValid: this.usernameInputRef.current.isValid()
     })
   }
 
   render() {
+    const isInProgress = !this.props.connection.isConnected || 
+                          this.props.connection.isUserDataSettingInProgress || 
+                          this.props.room.isJoiningInProgress;
+
     return (
       <GenericOverlay
         overlayType="success"
         title={"Join Room"}
         showCloseButton={false}>
-          <fieldset disabled={this.state.inProgress}>
+          <fieldset disabled={isInProgress}>
             <form onSubmit={this.handleOnSubmit}>
-              <UsernameTextInput ref={this.textInputRef} inProgress={this.state.inProgress} value={this.state.userName} onChange={this.handleOnUserNameChange}/>
+              <UsernameTextInput ref={this.usernameInputRef} inProgress={isInProgress} value={this.state.userName} onChange={this.handleOnUserNameChange}/>
               <div className="field is-grouped">
-                <div className={`control ${this.state.inProgress ? 'is-loading' : ''}`}>
-                  <button disabled={!this.state.isValid} className="button is-success" onClick={this.handleOnSubmit}>Join Room</button>
+                <div className={`control ${isInProgress ? 'is-loading' : ''}`}>
+                  <button disabled={!this.state.isUsernameValid} className="button is-success" onClick={this.handleOnSubmit}>Join Room</button>
                 </div>
               </div>
             </form>
