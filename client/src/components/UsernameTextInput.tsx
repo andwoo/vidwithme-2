@@ -55,7 +55,7 @@ export default class UsernameTextInput extends React.PureComponent<UsernameTextI
     return (
       <div className="field">
         <label className="label">Username</label>
-        <div className={`control has-icons-left has-icons-right ${this.getIsLoadingClassName()} ${isValidClassName}`}>
+        <div className={`control has-icons-left ${this.getIsLoadingClassName()} ${isValidClassName}`}>
           <input className={`input ${isValidClassName}`} type="text" placeholder="username" value={this.state.value} onChange={this.handOnChange}/>
           <span className="icon is-small is-left">
             <i className="fas fa-user"></i>

@@ -1,0 +1,86 @@
+import * as React from 'react';
+import { useParams } from "react-router-dom";
+import { Store } from '../redux/Store';
+import * as StoreModels from '../redux/interfaces/StoreModels';
+import SignalRConnection from '../signalr/SignalRConnection';
+
+interface ChatRoomProps extends Store {
+  roomId: string;
+}
+
+interface ChatRoomState {
+  chatInput: string;
+}
+
+class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chatInput: ''
+    }
+  }
+  componentDidMount() {
+    SignalRConnection.registerEvent('chatMessageReceived', this.handleOnChatMessageReceived);
+    this.props.setRedirectRoomId(this.props.roomId);
+  }
+
+  componentWillUnmount() {
+    SignalRConnection.unregisterEvent('chatMessageReceived');
+  }
+
+  handleOnChatMessageReceived = (user : StoreModels.UserState, message : string) => {
+    this.props.receivedChatMessage({
+      message: message, 
+      user: user
+    });
+  }
+
+  isInRoom = () => {
+    return this.props.connection.isConnected &&
+    this.props.connection.isUserDataSet &&
+    this.props.room.id && this.props.room.id.length > 0;
+  }
+
+  handleOnSubmit = (event) => {
+    if(event) {
+      event.preventDefault();
+    }
+    this.props.sendChatMessage(this.state.chatInput);
+    this.setState({
+      chatInput: ''
+    });
+  }
+
+  renderChat = () => {
+    return (
+        <div className="chatRoom">
+          <div className="chatLog has-background-light">
+            {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <p key={index}>{`[${message.user.userName}] - ${message.message}`}</p>)}
+          </div>
+          <div className="chatInput has-background-white">
+            <form onSubmit={this.handleOnSubmit}>
+              <div className="field">
+                <div className="control">
+                <input className="input" type="text" placeholder="" value={this.state.chatInput} onChange={(event) => this.setState({chatInput: event.target.value})}/>
+                </div>
+              </div>
+              <div className="field is-grouped">
+                  <div className="control">
+                    <button className="button is-success" onClick={this.handleOnSubmit}>Send</button>
+                  </div>
+                </div>
+            </form>
+          </div>
+        </div>
+    )
+  }
+
+  render() {
+    return this.isInRoom() && this.renderChat();
+  }
+}
+
+export default function ChatRoom(store) {
+  let { room_id } = useParams();
+  return <ChatRoomInternal {...store} roomId={room_id}/>
+}

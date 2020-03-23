@@ -6,7 +6,7 @@ import { Store } from './redux/Store';
 import * as StoreModels from './redux/interfaces/StoreModels';
 import BasePage from './pages/BasePage';
 import Home from './pages/Home';
-import Video from './pages/Video';
+import ChatRoom from './pages/ChatRoom';
 import EntryOverlay from './components/EntryOverlay';
 import ErrorOverlay from './components/ErrorOverlay';
 
@@ -39,7 +39,7 @@ class App extends React.Component<Store> {
           <BrowserRouter>
             <Switch>
               <Route path="/:room_id">
-                <Video {...this.props}/>
+                <ChatRoom {...this.props}/>
               </Route>
               <Route path="/">
                 <Home {...this.props}/>

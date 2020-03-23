@@ -10,7 +10,7 @@ export default class VideoPlayer extends React.Component<Store> {
         url={url}
         playing={true}
         width="100%"
-        height="100%"
+        height="calc(100% - 1rem)"
       />
     );
   }

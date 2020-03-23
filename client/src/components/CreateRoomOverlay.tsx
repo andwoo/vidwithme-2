@@ -48,10 +48,6 @@ export default class CreateRoomOverlay extends React.Component<CreateRoomOverlay
                           this.props.connection.isUserDataSettingInProgress || 
                           this.props.room.isJoiningInProgress;
 
-                          console.log(`this.props.connection.isConnected ${this.props.connection.isConnected}`);
-                          console.log(`this.props.connection.isUserDataSettingInProgress ${this.props.connection.isUserDataSettingInProgress}`);
-                          console.log(`this.props.room.isJoiningInProgress ${this.props.room.isJoiningInProgress}`);
-
     return (
       <GenericOverlay
         overlayType="success"
