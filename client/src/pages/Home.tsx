@@ -15,10 +15,7 @@ class HomeInternal extends React.Component<HomeProps> {
 
   render() {
     return (
-      <div>
-        <p>HOME</p>
-        <br/>
-      </div>
+      <React.Fragment/>
     )
   }
 }

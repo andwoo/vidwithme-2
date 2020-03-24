@@ -2,7 +2,7 @@
 
 @import "../node_modules/bulma/bulma";
 
-$bottomCorrection: 5rem;
+$bottomCorrection: 0.5rem;
 $navbarHeight: 3rem;
 $navbarItemPadding: 1rem;
 $chatInputHeight: 100px;
@@ -65,4 +65,5 @@ html, body {
 }
 
 .chatInput {
+  padding: 0.75rem;
 }

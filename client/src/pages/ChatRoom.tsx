@@ -13,8 +13,12 @@ interface ChatRoomState {
 }
 
 class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
+  private shouldScrollToBottom: boolean;
+  private scrollListRef: React.RefObject<HTMLDivElement>;
+
   constructor(props) {
     super(props);
+    this.scrollListRef = React.createRef()
     this.state = {
       chatInput: ''
     }
@@ -26,6 +30,16 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
 
   componentWillUnmount() {
     SignalRConnection.unregisterEvent('chatMessageReceived');
+  }
+
+  componentWillUpdate() {
+    this.shouldScrollToBottom = (this.scrollListRef.current.scrollTop + this.scrollListRef.current.offsetHeight) === this.scrollListRef.current.scrollHeight;
+  }
+
+  componentDidUpdate() {
+    if (this.shouldScrollToBottom) {
+      this.scrollListRef.current.scrollTop = this.scrollListRef.current.scrollHeight;
+    }
   }
 
   handleOnChatMessageReceived = (user : StoreModels.UserState, message : string) => {
@@ -54,7 +68,7 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   renderChat = () => {
     return (
         <div className="chatRoom">
-          <div className="chatLog has-background-light">
+          <div className="chatLog has-background-light" ref={this.scrollListRef}>
             {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <p key={index}>{`[${message.user.userName}] - ${message.message}`}</p>)}
           </div>
           <div className="chatInput has-background-white">
@@ -66,14 +80,14 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
               </div>
               <div className="field is-grouped">
                   <div className="control">
-                    <button className="button is-success" onClick={this.handleOnSubmit}>Send</button>
+                    <button className="button is-danger" onClick={this.handleOnSubmit}>Send</button>
                   </div>
                 </div>
             </form>
           </div>
         </div>
     )
-  }
+  }//  
 
   render() {
     return this.isInRoom() && this.renderChat();
