@@ -32,11 +32,11 @@ export default class UsernameTextInput extends React.PureComponent<UsernameTextI
   }
   getIsValidClassName = () => {
     if(this.isValid()) {
-      return 'is-success'
+      return ''
     } else if(this.state.hasEnteredInput && !this.isValid()) {
       return 'is-danger'
     }
-    return 'is-success'
+    return ''
   }
   isValid = () => {
     return this.state.value && this.state.value.length >= MinCharacters && this.state.value.length < MaxCharacters;

@@ -50,7 +50,7 @@ export default class CreateRoomOverlay extends React.Component<CreateRoomOverlay
 
     return (
       <GenericOverlay
-        overlayType="success"
+        overlayType=""
         title={"Create Room"}
         showCloseButton={false}>
           <fieldset disabled={isInProgress}>
@@ -58,7 +58,7 @@ export default class CreateRoomOverlay extends React.Component<CreateRoomOverlay
               <UsernameTextInput ref={this.usernameInputRef} inProgress={isInProgress} value={this.state.userName} onChange={this.handleOnUserNameChange}/>
               <div className="field is-grouped">
                 <div className={`control ${isInProgress ? 'is-loading' : ''}`}>
-                  <button disabled={!this.state.isUsernameValid} className="button is-success" onClick={this.handleOnSubmit}>Create Room</button>
+                  <button disabled={!this.state.isUsernameValid} className="button" onClick={this.handleOnSubmit}>Create Room</button>
                 </div>
               </div>
             </form>

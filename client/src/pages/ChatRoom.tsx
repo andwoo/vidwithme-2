@@ -33,11 +33,13 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   }
 
   componentWillUpdate() {
-    this.shouldScrollToBottom = (this.scrollListRef.current.scrollTop + this.scrollListRef.current.offsetHeight) === this.scrollListRef.current.scrollHeight;
+    if(this.scrollListRef.current) {
+      this.shouldScrollToBottom = (this.scrollListRef.current.scrollTop + this.scrollListRef.current.offsetHeight) === this.scrollListRef.current.scrollHeight;
+    }
   }
 
   componentDidUpdate() {
-    if (this.shouldScrollToBottom) {
+    if (this.scrollListRef.current && this.shouldScrollToBottom) {
       this.scrollListRef.current.scrollTop = this.scrollListRef.current.scrollHeight;
     }
   }
