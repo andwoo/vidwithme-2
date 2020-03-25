@@ -110,6 +110,9 @@ namespace VidWithMe.Hub
 
     public async Task SendChatMessage(string message)
     {
+      if(string.IsNullOrWhiteSpace(message)) {
+        return;
+      }
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
     }
   }
