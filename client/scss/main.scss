@@ -4,10 +4,21 @@
 
 $rootHeightDesktop: 100vh;
 $rootHeightMobile: 50vh;
+
 $navbarHeight: 3rem;
+
 $navbarLogoPadding: 0.5rem;
+$navbarLogoHeight: 3rem;
+
+$navbarTextPadding: 0.5rem;
+$navbarTextSize: 1.5rem;
+$navbarTextSizeTablet: 1rem;
+$navbarTextColor: hsl(348, 100%, 61%);
+
 $navbarRoomIdPadding: 1rem;
+
 $bottomContentPadding: 1rem;
+$chatInputPadding: 0.75rem;
 
 html, body {
   padding: 0;
@@ -41,10 +52,32 @@ html, body {
   .navbar--left {
     align-self: center;
     .logo {
-      height: calc(#{$navbarHeight} - #{$navbarLogoPadding});
-      width: auto;
+      height: auto;
+      width: $navbarLogoHeight;
       padding-left: $navbarLogoPadding;
       padding-top: calc(#{$navbarLogoPadding} / 2);
+    }
+  }
+
+  .navbar--center {
+    align-self: center;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: $navbarTextSize;
+    color: $navbarTextColor;
+    
+    @include tablet-only {
+      font-size: $navbarTextSizeTablet;
+    }
+
+    .vid--text {
+      padding-left: $navbarTextPadding;
+      font-weight: bold;
+    }
+
+    .withme--text {
+      margin-left: -2px;
+      font-weight: bold;
+      font-style: italic;
     }
   }
 
@@ -78,8 +111,8 @@ html, body {
 }
 
 .chatInput {
-  padding-top: 0.75rem;
+  padding-top: $chatInputPadding;
   padding-bottom: 0rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
+  padding-left: $chatInputPadding;
+  padding-right: $chatInputPadding;
 }
