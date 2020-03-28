@@ -75,16 +75,18 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
           </div>
           <div className="chatInput has-background-white">
             <form onSubmit={this.handleOnSubmit}>
-              <div className="field">
-                <div className="control">
-                <input className="input" type="text" placeholder="" value={this.state.chatInput} onChange={(event) => this.setState({chatInput: event.target.value})}/>
+              <div style={{display: 'flex'}}>
+                <div className="field" style={{flexGrow: 1, marginBottom: '0rem'}}>
+                  <div className="control">
+                  <input className="input" type="text" placeholder="'Hey all!' or 'https://www.youtube.com/watch?v=a1b2c3'" value={this.state.chatInput} onChange={(event) => this.setState({chatInput: event.target.value})}/>
+                  </div>
                 </div>
-              </div>
-              <div className="field is-grouped">
+                <div className="field is-grouped" style={{marginLeft: '0.75rem', marginBottom: '0rem'}}>
                   <div className="control">
                     <button className="button is-danger" onClick={this.handleOnSubmit}>Send</button>
                   </div>
                 </div>
+              </div>
             </form>
           </div>
         </div>
