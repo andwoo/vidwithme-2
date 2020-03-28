@@ -87,6 +87,11 @@ html, body {
     .roomId {
       padding-right: $navbarRoomIdPadding
     }
+
+    .clipboard {
+      cursor: pointer;
+      padding-right: $navbarRoomIdPadding
+    }
   }
 }
 
