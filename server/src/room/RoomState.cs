@@ -18,6 +18,9 @@ namespace VidWithMe.Room
 
   public class PlaylistItem
   {
-    public string Url { get; set; }
+    public string Vendor {get; set;}
+    public string Title {get; set;}
+    public string Id {get; set;}
+    public string Thumbnail {get; set;}
   }
 }

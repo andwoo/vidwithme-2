@@ -6,21 +6,23 @@ using System.Text.Json;
 using System;
 using System.Web;
 using System.Linq;
+using VidWithMe.Room;
 
 namespace VidWithMe.Utils
 {
   public static class YoutubeUtil
   {
-    public static async Task<YoutubeVideoDetails> GetYoutubeVideoDetails(string apiKey, string videoId)
+    public static async Task<PlaylistItem> GetYoutubeVideoDetails(string apiKey, string videoId)
     {
       string json = await GetUrlContents(null, $"https://www.googleapis.com/youtube/v3/videos?id={videoId}&key={apiKey}&part=snippet,contentDetails,statistics,status");
-      YoutubeVideoDetails data = null;
+      PlaylistItem data = null;
       try
       {
         using (JsonDocument document = JsonDocument.Parse(json))
         {
           var item = document.RootElement.GetProperty("items").EnumerateArray().First();
-          data = new YoutubeVideoDetails();
+          data = new PlaylistItem();
+          data.Vendor = "youtube";
           data.Title = item.GetProperty("snippet").GetProperty("title").GetString();
           data.Id = item.GetProperty("id").GetString();
           data.Thumbnail = $"https://img.youtube.com/vi/{data.Id}/0.jpg";
@@ -77,12 +79,5 @@ namespace VidWithMe.Utils
       }
       return content;
     }
-  }
-
-  public class YoutubeVideoDetails
-  {
-    public string Title {get; set;}
-    public string Id {get; set;}
-    public string Thumbnail {get; set;}
   }
 }

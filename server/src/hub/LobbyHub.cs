@@ -106,10 +106,16 @@ namespace VidWithMe.Hub
       }
     }
 
-    public async Task getRoomState()
+    public async Task GetRoomState()
     {
       RoomState roomState = RoomManager.GetRoom(ContextRoomId);
       await Clients.Caller.RoomStateReceived(roomState != null, roomState);
+    }
+
+    public async Task UpdateAllRoomState()
+    {
+      RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      await Clients.Group(ContextRoomId).RoomStateReceived(roomState != null, roomState);
     }
 
     public async Task SendChatMessage(string message)
@@ -129,11 +135,16 @@ namespace VidWithMe.Hub
       string videoId = YoutubeUtil.ExtractVideoId(message);
       if(!string.IsNullOrWhiteSpace(videoId))
       {
-        YoutubeVideoDetails videoData = await YoutubeUtil.GetYoutubeVideoDetails(CONFIGURATION["youtube_api_key"], videoId);
+        PlaylistItem videoData = await YoutubeUtil.GetYoutubeVideoDetails(CONFIGURATION["youtube_api_key"], videoId);
         if(videoData != null)
         {
-          await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, "Video Added");
-          await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, $"{videoData.Title} {videoData.Id} {videoData.Thumbnail}");
+          RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+          if(roomState != null) {
+            roomState.Playlist.Add(videoData);
+            await UpdateAllRoomState();
+            await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, "Video Added");
+            await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, $"{videoData.Title} {videoData.Id} {videoData.Thumbnail}");
+          }
           return;
         }
       }

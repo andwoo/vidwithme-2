@@ -4,10 +4,10 @@ import { Store } from '../redux/Store';
 
 export default class VideoPlayer extends React.Component<Store> {
   render () {
-    let url : string = this.props.room.playlist.length > 0 ? this.props.room.playlist[0].url : '';
+    let videoId : string = this.props.room.playlist.length > 0 ? this.props.room.playlist[0].id : '';
     return (
       <ReactPlayer
-        url={url}
+        url={`https://www.youtube.com/watch?v=${videoId}`}
         playing={true}
         width="100%"
         height="calc(100% - 1rem)"

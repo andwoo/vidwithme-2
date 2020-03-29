@@ -37,7 +37,10 @@ export interface ChatMessage {
 }
 
 export interface PlaylistItem {
-  url: string;
+  vendor: string;
+  title: string;
+  id: string;
+  thumbnail: string;
 }
 
 export interface StoreDispatch {
@@ -49,5 +52,5 @@ export interface StoreDispatch {
   getRoomState: () => void;
   sendChatMessage: (message : string) => void;
   receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction;
-  popConnectionError: () => Actions.BaseAction
+  popConnectionError: () => Actions.BaseAction;
 }

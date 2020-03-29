@@ -26,6 +26,7 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   }
   componentDidMount() {
     SignalRConnection.registerEvent('chatMessageReceived', this.handleOnChatMessageReceived);
+      
     this.props.setRedirectRoomId(this.props.roomId);
   }
 
@@ -92,7 +93,7 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
           </div>
         </div>
     )
-  }//  
+  }
 
   render() {
     return this.isInRoom() && this.renderChat();

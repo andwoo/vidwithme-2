@@ -64,8 +64,8 @@ const joinRoomAsync = async (dispatch, targetId : string) : Promise<void> => {
 
 const getRoomStateAsync = async (dispatch) : Promise<void> => {
   return new Promise((resolve, reject) => {
+    SignalRConnection.unregisterEvent('roomStateReceived');
     SignalRConnection.registerEvent('roomStateReceived', (success: boolean, roomState : StoreModels.RoomState) => {
-      SignalRConnection.unregisterEvent('roomStateReceived');
       if(success) {
         dispatch({
           type: ActionTypes.ROOM_STATE_RECEIVED,
