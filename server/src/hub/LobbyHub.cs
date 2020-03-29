@@ -76,9 +76,9 @@ namespace VidWithMe.Hub
       RoomState roomState = RoomManager.CreateRoom();
 
       //test code
-      PlaylistItem item = new PlaylistItem();
-      item.Url = "https://www.youtube.com/watch?v=_fiKPLXYttw";
-      roomState.Playlist.Add(item);
+      // PlaylistItem item = new PlaylistItem();
+      // item.Url = "https://www.youtube.com/watch?v=_fiKPLXYttw";
+      // roomState.Playlist.Add(item);
 
       await JoinRoom(roomState.Id);
     }
@@ -127,9 +127,6 @@ namespace VidWithMe.Hub
         message = message.Substring(0, MAX_CHAT_CHARACTERS);
         message += "...";
       }
-
-      //test
-      message += $" youtube key [{CONFIGURATION["youtube_api_key"]}]";
 
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
     }
