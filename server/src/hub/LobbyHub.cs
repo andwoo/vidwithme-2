@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using VidWithMe.Room;
 using VidWithMe.User;
+using VidWithMe.Utils;
 
 namespace VidWithMe.Hub
 {
@@ -74,12 +75,6 @@ namespace VidWithMe.Hub
     public async Task CreateRoom()
     {
       RoomState roomState = RoomManager.CreateRoom();
-
-      //test code
-      // PlaylistItem item = new PlaylistItem();
-      // item.Url = "https://www.youtube.com/watch?v=_fiKPLXYttw";
-      // roomState.Playlist.Add(item);
-
       await JoinRoom(roomState.Id);
     }
 
@@ -119,15 +114,30 @@ namespace VidWithMe.Hub
 
     public async Task SendChatMessage(string message)
     {
-      if(string.IsNullOrWhiteSpace(message)) {
+      if(string.IsNullOrWhiteSpace(message))
+      {
         return;
       }
 
-      if(message.Length > MAX_CHAT_CHARACTERS) {
+      if(message.Length > MAX_CHAT_CHARACTERS)
+      {
         message = message.Substring(0, MAX_CHAT_CHARACTERS);
         message += "...";
       }
 
+      //check if youtube link
+      string videoId = YoutubeUtil.ExtractVideoId(message);
+      if(!string.IsNullOrWhiteSpace(videoId))
+      {
+        YoutubeVideoDetails videoData = await YoutubeUtil.GetYoutubeVideoDetails(CONFIGURATION["youtube_api_key"], videoId);
+        if(videoData != null)
+        {
+          await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, "Video Added");
+          await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, $"{videoData.Title} {videoData.Id} {videoData.Thumbnail}");
+          return;
+        }
+      }
+      
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
     }
   }
