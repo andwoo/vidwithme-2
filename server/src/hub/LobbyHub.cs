@@ -11,6 +11,7 @@ namespace VidWithMe.Hub
     static readonly string KEY_USER_DATA = "user_data";
     static readonly string KEY_ROOM_ID = "room_id";
     static readonly int MAX_CHARACTERS = 12;
+    static readonly int MAX_CHAT_CHARACTERS = 250;
 
     private UserData ContextUserData
     {
@@ -113,6 +114,12 @@ namespace VidWithMe.Hub
       if(string.IsNullOrWhiteSpace(message)) {
         return;
       }
+
+      if(message.Length > MAX_CHAT_CHARACTERS) {
+        message = message.Substring(0, MAX_CHAT_CHARACTERS);
+        message += "...";
+      }
+
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
     }
   }

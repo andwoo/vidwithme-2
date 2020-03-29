@@ -18,6 +18,9 @@ $navbarTextColor: hsl(348, 100%, 61%);
 $navbarRoomIdPadding: 1rem;
 
 $bottomContentPadding: 1rem;
+
+$chatLogPadding: 0.75rem;
+$chatMessagePadding: 0.5rem;
 $chatInputPadding: 0.75rem;
 
 html, body {
@@ -89,7 +92,7 @@ html, body {
     }
 
     .clipboard {
-      color: hsl(0, 0%, 48%);
+      color: hsl(0, 0%, 14%);
       padding-right: $navbarRoomIdPadding;
       transition: color 0.2s ease;
       text-decoration: none;
@@ -99,7 +102,7 @@ html, body {
       }
 
       &:hover {
-        color: hsl(0, 0%, 14%);
+        color: hsl(0, 0%, 48%);
       }
     }
   }
@@ -123,6 +126,8 @@ html, body {
 .chatLog {
   flex-grow: 1;
   overflow: auto;
+  padding-left: $chatLogPadding;
+  padding-right: $chatLogPadding;
 }
 
 .chatInput {
@@ -130,4 +135,12 @@ html, body {
   padding-bottom: 0rem;
   padding-left: $chatInputPadding;
   padding-right: $chatInputPadding;
+}
+
+.chatMessage {
+  padding-top: $chatMessagePadding;
+
+  &:last-child {
+    padding-bottom: $chatMessagePadding;
+  }
 }
