@@ -89,8 +89,18 @@ html, body {
     }
 
     .clipboard {
-      cursor: pointer;
-      padding-right: $navbarRoomIdPadding
+      color: hsl(0, 0%, 48%);
+      padding-right: $navbarRoomIdPadding;
+      transition: color 0.2s ease;
+      text-decoration: none;
+
+      span {
+        transition: opacity 0.2s ease;
+      }
+
+      &:hover {
+        color: hsl(0, 0%, 14%);
+      }
     }
   }
 }

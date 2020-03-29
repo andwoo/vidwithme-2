@@ -56,7 +56,7 @@ module.exports = {
       filename: 'style.css',
     }),
     new HtmlWebpackPlugin({
-      title: 'React-Redux-Scss-Prod',
+      title: 'VidWith.me',
       template: path.resolve(sourceDirectory, './index.production.html'),
       filename: path.resolve(buildDirectory, './index.html'),
     }),
