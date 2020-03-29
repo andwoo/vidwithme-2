@@ -142,6 +142,13 @@ export function receivedChatMessage(message : StoreModels.ChatMessage) : Actions
   }
 }
 
+export function receivedPlaylistItemMessage(message : StoreModels.PlaylistItemAddedMessage) : Actions.ChatMessageAction {
+  return {
+    type: ActionTypes.RECEIVED_CHAT_MESSAGE,
+    message: message
+  }
+}
+
 export function connectionError(error: StoreModels.RoomError) : Actions.RoomErrorAction {
   return {
     type: ActionTypes.CONNECTION_ERROR,

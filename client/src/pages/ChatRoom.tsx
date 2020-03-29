@@ -26,12 +26,14 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   }
   componentDidMount() {
     SignalRConnection.registerEvent('chatMessageReceived', this.handleOnChatMessageReceived);
+    SignalRConnection.registerEvent('playlistItemMessageReceived', this.handleOnPlaylistItemMessageReceived);
       
     this.props.setRedirectRoomId(this.props.roomId);
   }
 
   componentWillUnmount() {
     SignalRConnection.unregisterEvent('chatMessageReceived');
+    SignalRConnection.unregisterEvent('playlistItemMessageReceived');
   }
 
   componentWillUpdate() {
@@ -50,6 +52,14 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
     this.props.receivedChatMessage({
       message: message, 
       user: user
+    });
+  }
+
+  handleOnPlaylistItemMessageReceived = (user : StoreModels.UserState, message: string, item : StoreModels.PlaylistItem) => {
+    this.props.receivedPlaylistItemMessage({
+      message: message,
+      user: user,
+      item: item 
     });
   }
 

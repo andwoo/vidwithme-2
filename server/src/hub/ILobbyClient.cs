@@ -9,6 +9,7 @@ namespace VidWithMe.Hub
     Task UserDataSet(bool success);
     Task JoinedRoom(bool success, string id);
     Task ChatMessageReceived(UserData user, string message);
+    Task PlaylistItemMessageReceived(UserData user, string message, PlaylistItem item);
     Task RoomStateReceived(bool success, RoomState roomState);
   }
 }

@@ -36,6 +36,11 @@ export interface ChatMessage {
   message: string;
 }
 
+export interface PlaylistItemAddedMessage extends ChatMessage {
+  user : UserState;
+  item: PlaylistItem;
+}
+
 export interface PlaylistItem {
   vendor: string;
   title: string;
@@ -51,6 +56,7 @@ export interface StoreDispatch {
   joinRoom: (id : string) => void;
   getRoomState: () => void;
   sendChatMessage: (message : string) => void;
+  receivedPlaylistItemMessage: (message : StoreModels.PlaylistItemAddedMessage) => Actions.ChatMessageAction;
   receivedChatMessage: (message : StoreModels.ChatMessage) => Actions.ChatMessageAction;
   popConnectionError: () => Actions.BaseAction;
 }

@@ -142,8 +142,7 @@ namespace VidWithMe.Hub
           if(roomState != null) {
             roomState.Playlist.Add(videoData);
             await UpdateAllRoomState();
-            await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, "Video Added");
-            await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, $"{videoData.Title} {videoData.Id} {videoData.Thumbnail}");
+            await Clients.Group(ContextRoomId).PlaylistItemMessageReceived(ContextUserData, "added", videoData);
           }
           return;
         }
