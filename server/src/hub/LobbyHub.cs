@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 using VidWithMe.Room;
@@ -12,6 +13,13 @@ namespace VidWithMe.Hub
     static readonly string KEY_ROOM_ID = "room_id";
     static readonly int MAX_CHARACTERS = 12;
     static readonly int MAX_CHAT_CHARACTERS = 250;
+
+    private readonly IConfiguration CONFIGURATION;
+
+    public LobbyHub(IConfiguration Configuration)
+    {
+      CONFIGURATION = Configuration;
+    }
 
     private UserData ContextUserData
     {
@@ -119,6 +127,9 @@ namespace VidWithMe.Hub
         message = message.Substring(0, MAX_CHAT_CHARACTERS);
         message += "...";
       }
+
+      //test
+      message += $" youtube key [{CONFIGURATION["youtube_api_key"]}]";
 
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
     }
