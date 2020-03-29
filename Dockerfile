@@ -20,4 +20,5 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
-CMD dotnet server.dll environment=Production
+# CMD dotnet server.dll environment=Production
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet server.dll environment=Production
