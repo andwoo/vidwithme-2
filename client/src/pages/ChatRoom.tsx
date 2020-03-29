@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Store } from '../redux/Store';
 import * as StoreModels from '../redux/interfaces/StoreModels';
 import SignalRConnection from '../signalr/SignalRConnection';
+import ChatMessage from '../components/ChatMessage';
 
 interface ChatRoomProps extends Store {
   roomId: string;
@@ -71,7 +72,7 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
     return (
         <div className="chatRoom">
           <div className="chatLog has-background-light" ref={this.scrollListRef}>
-            {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <p key={index}>{`[${message.user.userName}] - ${message.message}`}</p>)}
+            {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <ChatMessage key={index} {...message}/>)}
           </div>
           <div className="chatInput has-background-white">
             <form onSubmit={this.handleOnSubmit}>
