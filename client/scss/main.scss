@@ -22,6 +22,7 @@ $bottomContentPadding: 1rem;
 $chatLogPadding: 0.75rem;
 $chatMessagePadding: 0.5rem;
 $chatInputPadding: 0.75rem;
+$borderRadius: 6px;
 
 html, body {
   padding: 0;
@@ -142,5 +143,20 @@ html, body {
 
   &:last-child {
     padding-bottom: $chatMessagePadding;
+  }
+}
+
+.chatPlaylistItem {
+  display: flex;
+  flex-direction: row;
+  padding: $chatMessagePadding;
+  border-radius: $borderRadius;
+
+  img {
+    flex-grow: 1;
+    border-radius: $borderRadius;
+    width: auto;
+    height: 64px;
+    margin-right: $chatMessagePadding;
   }
 }
