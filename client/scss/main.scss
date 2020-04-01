@@ -19,7 +19,7 @@ $navbarRoomIdPadding: 1rem;
 
 $bottomContentPadding: 1rem;
 
-$chatLogPadding: 0.75rem;
+$chatLogPadding: 0.5rem;
 $chatMessagePadding: 0.5rem;
 $chatInputPadding: 0.75rem;
 $borderRadius: 6px;
@@ -155,8 +155,9 @@ html, body {
   img {
     flex-grow: 1;
     border-radius: $borderRadius;
-    width: auto;
-    height: 64px;
+    align-self: center;
+    max-height: 64px;
+    max-width: 64px;
     margin-right: $chatMessagePadding;
   }
 }
