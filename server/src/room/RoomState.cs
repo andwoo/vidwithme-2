@@ -20,7 +20,9 @@ namespace VidWithMe.Room
   {
     public string Vendor {get; set;}
     public string Title {get; set;}
-    public string Id {get; set;}
+    public string VideoId {get; set;}
     public string Thumbnail {get; set;}
+    public string Uid {get; set;}
+    public int StartTime {get; set;}
   }
 }

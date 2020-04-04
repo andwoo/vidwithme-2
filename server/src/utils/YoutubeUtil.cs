@@ -6,12 +6,16 @@ using System.Text.Json;
 using System;
 using System.Web;
 using System.Linq;
+using System.Text.RegularExpressions;
 using VidWithMe.Room;
 
 namespace VidWithMe.Utils
 {
   public static class YoutubeUtil
   {
+    private const int UID_LENGTH = 6;
+    private static readonly Regex TIME_STAMP_REGEX = new Regex(@"^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*)(?:(\?t|\&t|&start)=(\d+))?.*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     public static async Task<PlaylistItem> GetYoutubeVideoDetails(string apiKey, string videoId)
     {
       string json = await GetUrlContents(null, $"https://www.googleapis.com/youtube/v3/videos?id={videoId}&key={apiKey}&part=snippet,contentDetails,statistics,status");
@@ -24,8 +28,10 @@ namespace VidWithMe.Utils
           data = new PlaylistItem();
           data.Vendor = "youtube";
           data.Title = item.GetProperty("snippet").GetProperty("title").GetString();
-          data.Id = item.GetProperty("id").GetString();
-          data.Thumbnail = $"https://img.youtube.com/vi/{data.Id}/0.jpg";
+          data.VideoId = item.GetProperty("id").GetString();
+          data.Thumbnail = $"https://img.youtube.com/vi/{data.VideoId}/0.jpg";
+          data.Uid = Nanoid.Generate(size:UID_LENGTH);
+          data.StartTime = 0;
         }
       }
       catch
@@ -54,6 +60,31 @@ namespace VidWithMe.Utils
       {
         return uri.Segments.Last();
       }
+    }
+
+    public static int ExtractTimeStamp(string url)
+    {
+      Uri uri;
+      if(Uri.TryCreate(url, UriKind.Absolute, out uri))
+      {
+        var query = HttpUtility.ParseQueryString(uri.Query);
+        string videoId = string.Empty;
+
+        if (query.AllKeys.Contains("t") || query.AllKeys.Contains("start"))
+        {
+          MatchCollection matches = TIME_STAMP_REGEX.Matches(url);
+          if(matches != null && matches.Count > 0)
+          {
+            Match match = matches[0];
+            int result = 0; 
+            if(Int32.TryParse(match.Groups[match.Groups.Count - 1].Value, out result))
+            {
+              return result;
+            }
+          }
+        }
+      }
+      return 0;
     }
 
     private static async Task<string> GetUrlContents(Dictionary<string, string> headers, string url)

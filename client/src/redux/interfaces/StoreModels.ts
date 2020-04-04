@@ -44,8 +44,10 @@ export interface PlaylistItemAddedMessage extends ChatMessage {
 export interface PlaylistItem {
   vendor: string;
   title: string;
-  id: string;
+  videoId: string;
   thumbnail: string;
+  uid: string;
+  startTime: number;
 }
 
 export interface StoreDispatch {

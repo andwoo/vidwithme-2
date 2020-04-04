@@ -140,6 +140,7 @@ namespace VidWithMe.Hub
         {
           RoomState roomState = RoomManager.GetRoom(ContextRoomId);
           if(roomState != null) {
+            videoData.StartTime = YoutubeUtil.ExtractTimeStamp(message);
             roomState.Playlist.Add(videoData);
             await UpdateAllRoomState();
             await Clients.Group(ContextRoomId).PlaylistItemMessageReceived(ContextUserData, "added", videoData);
