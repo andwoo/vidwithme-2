@@ -15,11 +15,9 @@ interface ChatRoomState {
 
 class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   private shouldScrollToBottom: boolean;
-  private scrollListRef: React.RefObject<HTMLDivElement>;
 
   constructor(props) {
     super(props);
-    this.scrollListRef = React.createRef()
     this.state = {
       chatInput: ''
     }
@@ -37,14 +35,16 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   }
 
   componentWillUpdate() {
-    if(this.scrollListRef.current) {
-      this.shouldScrollToBottom = (this.scrollListRef.current.scrollTop + this.scrollListRef.current.offsetHeight) === this.scrollListRef.current.scrollHeight;
+    let container : any = document.querySelector('#chatLog .simplebar-content-wrapper');
+    if(container) {
+      this.shouldScrollToBottom = (container.scrollTop + container.offsetHeight) === container.scrollHeight;
     }
   }
 
   componentDidUpdate() {
-    if (this.scrollListRef.current && this.shouldScrollToBottom) {
-      this.scrollListRef.current.scrollTop = this.scrollListRef.current.scrollHeight;
+    let container : any = document.querySelector('#chatLog .simplebar-content-wrapper');
+    if (container && this.shouldScrollToBottom) {
+      container.scrollTop = container.scrollHeight;
     }
   }
 
@@ -82,8 +82,12 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   renderChat = () => {
     return (
         <div className="chatRoom">
-          <div className="chatLog has-background-light" ref={this.scrollListRef}>
-            {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <ChatMessage key={index} {...message}/>)}
+          <div className="chatLog has-background-light">
+            <div className="chatLogScrollView" id="chatLog" data-simplebar>
+              <div>
+                {this.props.room.chat.map((message : StoreModels.ChatMessage, index : number) => <ChatMessage key={index} {...message}/>)}
+              </div>
+            </div>
           </div>
           <div className="chatInput has-background-white">
             <form onSubmit={this.handleOnSubmit}>
