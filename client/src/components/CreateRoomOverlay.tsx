@@ -58,7 +58,7 @@ export default class CreateRoomOverlay extends React.Component<CreateRoomOverlay
               <UsernameTextInput ref={this.usernameInputRef} inProgress={isInProgress} value={this.state.userName} onChange={this.handleOnUserNameChange}/>
               <div className="field is-grouped">
                 <div className={`control ${isInProgress ? 'is-loading' : ''}`}>
-                  <button disabled={!this.state.isUsernameValid} className="button" onClick={this.handleOnSubmit}>Create Room</button>
+                  <button disabled={!this.state.isUsernameValid} className="button is-dark" onClick={this.handleOnSubmit}>Create Room</button>
                 </div>
               </div>
             </form>

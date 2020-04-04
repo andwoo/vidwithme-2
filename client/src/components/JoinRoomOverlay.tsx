@@ -37,6 +37,10 @@ export default class JoinRoomOverlay extends React.Component<JoinRoomOverlayProp
     this.props.setUserData({ userName: this.state.userName });
   }
 
+  handleOnCreate = () => {
+    document.location.href="/";
+  }
+
   handleOnUserNameChange = (value : string) => {
     this.setState({
       userName: value,
@@ -59,7 +63,12 @@ export default class JoinRoomOverlay extends React.Component<JoinRoomOverlayProp
               <UsernameTextInput ref={this.usernameInputRef} inProgress={isInProgress} value={this.state.userName} onChange={this.handleOnUserNameChange}/>
               <div className="field is-grouped">
                 <div className={`control ${isInProgress ? 'is-loading' : ''}`}>
-                  <button disabled={!this.state.isUsernameValid} className="button" onClick={this.handleOnSubmit}>Join Room</button>
+                  <button disabled={!this.state.isUsernameValid} className="button is-dark" onClick={this.handleOnSubmit}>Join Room</button>
+                </div>
+              </div>
+              <div className="field is-grouped">
+                <div className={`control ${isInProgress ? 'is-loading' : ''}`}>
+                    <button disabled={!this.state.isUsernameValid} className="button" onClick={this.handleOnCreate}>Create Room</button>
                 </div>
               </div>
             </form>
