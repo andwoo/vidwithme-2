@@ -110,6 +110,11 @@ namespace VidWithMe.Hub
     public async Task GetRoomState()
     {
       RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      PlaylistItem item = roomState.Playlist.Count > 0 ? roomState.Playlist[0] : null;
+      if(item != null)
+      {
+        item.CalculateStartTimeCorrection();
+      }
       await Clients.Caller.RoomStateReceived(roomState != null, roomState);
     }
 
@@ -143,6 +148,10 @@ namespace VidWithMe.Hub
           if(roomState != null) {
             videoData.StartTime = YoutubeUtil.ExtractTimeStamp(message);
             roomState.Playlist.Add(videoData);
+            if(roomState.Playlist.Count == 1) {
+              //first video
+              videoData.IsPlaying = true;
+            }
             await UpdateAllRoomState();
             await Clients.Group(ContextRoomId).PlaylistItemMessageReceived(ContextUserData, "added", videoData);
           }
@@ -165,6 +174,52 @@ namespace VidWithMe.Hub
           await UpdateAllRoomState();
         }
       }
+    }
+
+    public async Task PauseVideo(string uid, float seekSeconds)
+    {
+      RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      if(roomState != null && !string.IsNullOrEmpty(uid))
+      {
+        PlaylistItem item = roomState.Playlist.FirstOrDefault(el => el.Uid == uid);
+        if(item != null)
+        {
+          item.StartTime = seekSeconds;
+          item.IsPlaying = false;
+          item.ResetStartTimeTracking();
+          await UpdateAllRoomState();
+        }
+      }
+    }
+
+    public async Task ResumeVideo(string uid, float seekSeconds)
+    {
+      RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      if(roomState != null && !string.IsNullOrEmpty(uid))
+      {
+        PlaylistItem item = roomState.Playlist.FirstOrDefault(el => el.Uid == uid);
+        if(item != null)
+        {
+          item.StartTime = seekSeconds;
+          item.IsPlaying = true;
+          item.ResetStartTimeTracking();
+          await UpdateAllRoomState();
+        }
+      }
+    }
+
+    public async Task CompleteVideo(string uid)
+    {
+      //set the next video as is playing
+      RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      if(roomState != null && !string.IsNullOrEmpty(uid))
+      {
+        if(roomState.Playlist.Count > 2)
+        {
+          roomState.Playlist[1].IsPlaying = true;
+        }
+      }
+      await RemovePlaylistItem(uid);
     }
   }
 }

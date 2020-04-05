@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace VidWithMe.Room
@@ -23,6 +24,23 @@ namespace VidWithMe.Room
     public string VideoId {get; set;}
     public string Thumbnail {get; set;}
     public string Uid {get; set;}
-    public int StartTime {get; set;}
+    public bool IsPlaying {get; set;}
+    public float StartTime {get; set;}
+
+    private Nullable<DateTime> m_StartTimeLastSet = null;
+
+    public void ResetStartTimeTracking()
+    {
+      m_StartTimeLastSet = DateTime.UtcNow;
+    }
+
+    public void CalculateStartTimeCorrection()
+    {
+      if(IsPlaying && m_StartTimeLastSet.HasValue)
+      {
+        StartTime = StartTime + (Int32)(DateTime.UtcNow.Subtract(m_StartTimeLastSet.Value)).TotalSeconds;
+      }
+      ResetStartTimeTracking();
+    }
   }
 }

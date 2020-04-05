@@ -48,6 +48,7 @@ export interface PlaylistItem {
   thumbnail: string;
   uid: string;
   startTime: number;
+  isPlaying: boolean;
 }
 
 export interface StoreDispatch {
