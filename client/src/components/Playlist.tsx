@@ -1,8 +1,7 @@
-//SignalRConnection.sendEvent('joinRoom', targetId);
-
 import * as React from 'react';
 import { Store } from '../redux/Store';
 import * as StoreModels from '../redux/interfaces/StoreModels';
+import SignalRConnection from '../signalr/SignalRConnection';
 
 export default class Playlist extends React.Component<Store> {
   render () {
@@ -18,17 +17,39 @@ export default class Playlist extends React.Component<Store> {
   }
 }
 
-//dark colour
 class PlaylistItem extends React.PureComponent<StoreModels.PlaylistItem> {
+
+  handleOnRemoveItem = () => {
+    SignalRConnection.sendEvent('removePlaylistItem', this.props.uid);
+  }
+
+  getVendorIcon = () => {
+    if(this.props.vendor === "youtube") {
+      return "fab fa-youtube";
+    }
+    return "fas fa-question";
+  }
+
+  getVendorColour = () => {
+    if(this.props.vendor === "youtube") {
+      return "#c4302b";
+    }
+    return "#ffffff";
+  }
+
   render() {
     return (
       <div className="playlistItem">
         <div className="container has-background-black-ter">
           <img src={this.props.thumbnail}/>
-          <span className="has-text-light" style={{overflow: "hidden",
-  textOverflow: "ellipsis"}}>
-            {this.props.title}
-          </span>
+          <div style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+            <span className="has-text-light">
+              {this.props.title}
+            </span>
+            <br/>
+            <i className={this.getVendorIcon()} style={{color: this.getVendorColour()}}/>
+          </div>
+          <button className="delete" onClick={this.handleOnRemoveItem}/>
         </div>
       </div>
     )

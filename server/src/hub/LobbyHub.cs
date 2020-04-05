@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using VidWithMe.Room;
 using VidWithMe.User;
 using VidWithMe.Utils;
@@ -150,6 +151,20 @@ namespace VidWithMe.Hub
       }
       
       await Clients.Group(ContextRoomId).ChatMessageReceived(ContextUserData, message);
+    }
+
+    public async Task RemovePlaylistItem(string uid)
+    {
+      RoomState roomState = RoomManager.GetRoom(ContextRoomId);
+      if(roomState != null && !string.IsNullOrEmpty(uid))
+      {
+        PlaylistItem item = roomState.Playlist.FirstOrDefault(el => el.Uid == uid);
+        if(item != null)
+        {
+          roomState.Playlist.Remove(item);
+          await UpdateAllRoomState();
+        }
+      }
     }
   }
 }
