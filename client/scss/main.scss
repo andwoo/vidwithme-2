@@ -32,7 +32,6 @@ html, body {
 
 .root {
   height: $rootHeightDesktop;
-  overflow: hidden;
 }
 
 .video {
@@ -48,34 +47,37 @@ html, body {
 .playlist {
   background-color: #000000;
   height: 5rem;
-  max-width: 100%;
-  display: flex;
-  flex-direction: row;
-  overflow-y: hidden;
-  overflow-x: auto;
+  width: 100%;
+  overflow: auto;
+
+  .simplebar-scrollbar:before {
+    background: white;
+  }
 
   .playlistItem {
-    display: flex;
-    flex-direction: row;
     margin-left: $chatMessagePadding;
     margin-top: $chatMessagePadding;
     margin-bottom: $chatMessagePadding;
-    padding: $chatMessagePadding;
-    border-radius: $borderRadius;
-    min-width: 200px;
-    max-width: 200px;
 
     &:last-child {
       margin-right: $chatMessagePadding;
     }
-
-    img {
-      flex-grow: 1;
+    .container {
+      display: flex;
+      flex-direction: row;
+      padding: $chatMessagePadding;
       border-radius: $borderRadius;
-      align-self: center;
-      max-height: 64px;
-      max-width: 64px;
-      margin-right: $chatMessagePadding;
+      min-width: 200px;
+      max-width: 200px;
+      max-height: 100%;
+
+      img {
+        border-radius: $borderRadius;
+        align-self: center;
+        max-height: 64px;
+        max-width: 64px;
+        margin-right: $chatMessagePadding;
+      }
     }
   }
 }
