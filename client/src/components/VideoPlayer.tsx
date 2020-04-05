@@ -11,10 +11,13 @@ interface VideoPlayerState {
 
 export default class VideoPlayer extends React.Component<Store, VideoPlayerState> {
   private videoPlayerRef : React.RefObject<ReactPlayer>;
+  private ignoreVideoEnd : boolean;
+  private videoEndTimeout : NodeJS.Timeout;
 
   constructor(props) {
     super(props);
     this.videoPlayerRef = React.createRef();
+    this.ignoreVideoEnd = false;
     this.state = {
       url: '',
       isPlaying: false
@@ -25,7 +28,7 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
     const currentActiveVideo : StoreModels.PlaylistItem = this.getActivePlaylistItemForStore(this.props);
     if(!currentActiveVideo) {
       if( this.state.url !== '') {
-        console.log(`|| NO NEXT VIDEO`);
+        this.ignoreVideoEnd = false;
         this.setState({
           url: '',
           isPlaying: false
@@ -36,7 +39,12 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
 
     const previousActiveVideo : StoreModels.PlaylistItem = this.getActivePlaylistItemForStore(prevProps);
     if(!previousActiveVideo || previousActiveVideo.uid !==  currentActiveVideo.uid) {
-      console.log(`|| PLAYING NEXT VIDEO [${currentActiveVideo.uid}]`);
+      this.ignoreVideoEnd = true;
+      clearTimeout(this.videoEndTimeout);
+      this.videoEndTimeout = setTimeout(() => {
+        this.ignoreVideoEnd = false;
+      }, 2000);
+
       this.setState({
         url: `https://www.youtube.com/watch?v=${currentActiveVideo.videoId}`,
         isPlaying: currentActiveVideo.isPlaying
@@ -47,7 +55,6 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
     }
 
     if(previousActiveVideo.isPlaying !== currentActiveVideo.isPlaying) {
-      console.log(`<< ${currentActiveVideo.isPlaying ? 'PLAYING' : 'PAUSING'} VIDEO`);
       this.setState({
         isPlaying: currentActiveVideo.isPlaying
         }, () => {
@@ -68,30 +75,35 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
 //EVENTS FROM VIDEO PLAYER
   handleLocalVideoPause = () => {
     const currentActiveVideo : StoreModels.PlaylistItem = this.getActivePlaylistItemForStore(this.props);
-    if(!this.state.isPlaying && !currentActiveVideo.isPlaying) {
+    if(!currentActiveVideo || !this.state.isPlaying && !currentActiveVideo.isPlaying) {
       return;
     }
 
     if(this.state.isPlaying) {
       const seekSeconds : number = this.videoPlayerRef.current && this.videoPlayerRef.current.getCurrentTime();
-      SignalRConnection.sendEvent('pauseVideo', this.getActivePlaylistItemForStore(this.props).uid, seekSeconds);
+      SignalRConnection.sendEvent('pauseVideo', currentActiveVideo.uid, seekSeconds);
     }
   }
 
   handleLocalVideoResume = () => {
     const currentActiveVideo : StoreModels.PlaylistItem = this.getActivePlaylistItemForStore(this.props);
-    if(this.state.isPlaying && currentActiveVideo.isPlaying) {
+    if(!currentActiveVideo || this.state.isPlaying && currentActiveVideo.isPlaying) {
       return;
     }
 
     if(!this.state.isPlaying) {
       const seekSeconds : number = this.videoPlayerRef.current && this.videoPlayerRef.current.getCurrentTime();
-      SignalRConnection.sendEvent('resumeVideo', this.getActivePlaylistItemForStore(this.props).uid, seekSeconds);
+      SignalRConnection.sendEvent('resumeVideo', currentActiveVideo.uid, seekSeconds);
     }
   }
 
   handleLocalVideoComplete = () => {
-    SignalRConnection.sendEvent('completeVideo', this.getActivePlaylistItemForStore(this.props).uid);
+    const currentActiveVideo : StoreModels.PlaylistItem = this.getActivePlaylistItemForStore(this.props);
+    if(this.ignoreVideoEnd || !currentActiveVideo) {
+      // console.log(`short circuit video end`);
+      return;
+    }
+    SignalRConnection.sendEvent('completeVideo', currentActiveVideo.uid);
   }
   
   render () {
@@ -101,11 +113,9 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
         url={this.state.url}
         playing={this.state.isPlaying}
         controls={true}
-
         onPlay={this.handleLocalVideoResume}
         onPause={this.handleLocalVideoPause}
         onEnded={this.handleLocalVideoComplete}
-
         width="100%"
         height="calc(100% - 5rem)"
       />

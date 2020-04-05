@@ -151,6 +151,7 @@ namespace VidWithMe.Hub
             if(roomState.Playlist.Count == 1) {
               //first video
               videoData.IsPlaying = true;
+              videoData.ResetStartTimeTracking();
             }
             await UpdateAllRoomState();
             await Clients.Group(ContextRoomId).PlaylistItemMessageReceived(ContextUserData, "added", videoData);
@@ -170,6 +171,12 @@ namespace VidWithMe.Hub
         PlaylistItem item = roomState.Playlist.FirstOrDefault(el => el.Uid == uid);
         if(item != null)
         {
+          int index = roomState.Playlist.IndexOf(item);
+          if(index == 0 && roomState.Playlist.Count > 1)
+          {
+            roomState.Playlist[1].IsPlaying = true;
+          }
+
           roomState.Playlist.Remove(item);
           await UpdateAllRoomState();
         }
@@ -214,9 +221,10 @@ namespace VidWithMe.Hub
       RoomState roomState = RoomManager.GetRoom(ContextRoomId);
       if(roomState != null && !string.IsNullOrEmpty(uid))
       {
-        if(roomState.Playlist.Count > 2)
+        if(roomState.Playlist.Count > 1)
         {
           roomState.Playlist[1].IsPlaying = true;
+          roomState.Playlist[1].ResetStartTimeTracking();
         }
       }
       await RemovePlaylistItem(uid);

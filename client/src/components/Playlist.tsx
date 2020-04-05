@@ -9,7 +9,7 @@ export default class Playlist extends React.Component<Store> {
       <div className="playlist" data-simplebar>
         <div style={{whiteSpace: "nowrap"}}>
           <div style={{display: "flex", flexDirection: "row"}}>
-            {this.props.room.playlist.map((item: StoreModels.PlaylistItem, index: number) => <PlaylistItem key={index} {...item}/>)}
+            {this.props.room.playlist.map((item: StoreModels.PlaylistItem, index: number) => <PlaylistItem key={index} item={item} isNowPlaying={index === 0}/>)}
           </div>
         </div>
       </div>
@@ -17,21 +17,26 @@ export default class Playlist extends React.Component<Store> {
   }
 }
 
-class PlaylistItem extends React.PureComponent<StoreModels.PlaylistItem> {
+interface PlaylistItemProps {
+  item: StoreModels.PlaylistItem;
+  isNowPlaying: boolean;
+}
+
+class PlaylistItem extends React.PureComponent<PlaylistItemProps> {
 
   handleOnRemoveItem = () => {
-    SignalRConnection.sendEvent('removePlaylistItem', this.props.uid);
+    SignalRConnection.sendEvent('removePlaylistItem', this.props.item.uid);
   }
 
   getVendorIcon = () => {
-    if(this.props.vendor === "youtube") {
+    if(this.props.item.vendor === "youtube") {
       return "fab fa-youtube";
     }
     return "fas fa-question";
   }
 
   getVendorColour = () => {
-    if(this.props.vendor === "youtube") {
+    if(this.props.item.vendor === "youtube") {
       return "#c4302b";
     }
     return "#ffffff";
@@ -40,14 +45,15 @@ class PlaylistItem extends React.PureComponent<StoreModels.PlaylistItem> {
   render() {
     return (
       <div className="playlistItem">
-        <div className="container has-background-black-ter">
-          <img src={this.props.thumbnail}/>
-          <div style={{overflow: "hidden", textOverflow: "ellipsis"}}>
-            <span className="has-text-light">
-              {this.props.title}
+        <div className={`container ${this.props.isNowPlaying ? 'has-background-grey-dark' : 'has-background-black-ter'}`}>
+          <img src={this.props.item.thumbnail}/>
+          <div className="has-text-light" style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+            <span>
+              {this.props.item.title}
             </span>
             <br/>
             <i className={this.getVendorIcon()} style={{color: this.getVendorColour()}}/>
+            <span>{this.props.isNowPlaying ? ' PLAYING' : ''}</span>
           </div>
           <button className="delete" onClick={this.handleOnRemoveItem}/>
         </div>
