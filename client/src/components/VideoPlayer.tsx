@@ -43,7 +43,7 @@ export default class VideoPlayer extends React.Component<Store, VideoPlayerState
       clearTimeout(this.videoEndTimeout);
       this.videoEndTimeout = setTimeout(() => {
         this.ignoreVideoEnd = false;
-      }, 2000);
+      }, 3000);
 
       this.setState({
         url: `https://www.youtube.com/watch?v=${currentActiveVideo.videoId}`,
