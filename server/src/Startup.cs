@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using VidWithMe.Hub;
-using Microsoft.AspNetCore.Http;
 
 namespace server
 {
@@ -16,13 +15,14 @@ namespace server
       services.AddSignalR();
       services.AddHttpsRedirection(options =>
       {
-          options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-          options.HttpsPort = 443;
+        options.HttpsPort = 443;
       });
     }
 
     public void Configure(IConfiguration configuration, IApplicationBuilder app, IWebHostEnvironment environment)
     {
+      ConfigureServices(app, environment);
+
       if (environment.IsDevelopment())
       {
         ConfigureDevelopmentServices(app, environment);
@@ -31,8 +31,6 @@ namespace server
       {
         ConfigureProductionServices(app, environment);
       }
-
-      ConfigureServices(app, environment);
     }
 
     private void ConfigureDevelopmentServices(IApplicationBuilder app, IWebHostEnvironment environment)
