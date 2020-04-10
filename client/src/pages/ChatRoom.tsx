@@ -23,6 +23,8 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
     }
   }
   componentDidMount() {
+    SignalRConnection.registerEvent('joinedRoomMessageReceived', this.handleOnjoinedOrLeaveMessageReceived);
+    SignalRConnection.registerEvent('leftRoomMessageReceived', this.handleOnjoinedOrLeaveMessageReceived);
     SignalRConnection.registerEvent('chatMessageReceived', this.handleOnChatMessageReceived);
     SignalRConnection.registerEvent('playlistItemMessageReceived', this.handleOnPlaylistItemMessageReceived);
       
@@ -30,6 +32,8 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
   }
 
   componentWillUnmount() {
+    SignalRConnection.unregisterEvent('joinedRoomMessageReceived');
+    SignalRConnection.unregisterEvent('leftRoomMessageReceived');
     SignalRConnection.unregisterEvent('chatMessageReceived');
     SignalRConnection.unregisterEvent('playlistItemMessageReceived');
   }
@@ -48,10 +52,19 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
     }
   }
 
+  handleOnjoinedOrLeaveMessageReceived = (user : StoreModels.UserState, message : string) => {
+    this.props.receivedChatMessage({
+      message: message, 
+      user: user,
+      type: StoreModels.ChatMessageType.room
+    });
+  }
+
   handleOnChatMessageReceived = (user : StoreModels.UserState, message : string) => {
     this.props.receivedChatMessage({
       message: message, 
-      user: user
+      user: user,
+      type: StoreModels.ChatMessageType.message
     });
   }
 
@@ -59,7 +72,8 @@ class ChatRoomInternal extends React.Component<ChatRoomProps, ChatRoomState> {
     this.props.receivedPlaylistItemMessage({
       message: message,
       user: user,
-      item: item 
+      item: item,
+      type: StoreModels.ChatMessageType.media
     });
   }
 

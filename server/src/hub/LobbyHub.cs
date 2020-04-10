@@ -90,7 +90,7 @@ namespace VidWithMe.Hub
       ContextRoomId = id;
       await Clients.Caller.JoinedRoom(true, id);
       RoomManager.GetRoom(id).UserCount++;
-      await Clients.GroupExcept(id, Context.ConnectionId).ChatMessageReceived(ContextUserData, "Has joined the room.");
+      await Clients.GroupExcept(id, Context.ConnectionId).JoinedRoomMessageReceived(ContextUserData, "has joined");
     }
 
     public async Task LeaveRoom()
@@ -98,7 +98,7 @@ namespace VidWithMe.Hub
       string id = ContextRoomId;
       RoomState roomState = RoomManager.GetRoom(id);
       if(roomState != null) {
-        await SendChatMessage("Left the room"); 
+        await Clients.GroupExcept(id, Context.ConnectionId).LeftRoomMessageReceived(ContextUserData, "has left");
         if(--RoomManager.GetRoom(id).UserCount <= 0) {
           RoomManager.LeaveRoom(id);
         }

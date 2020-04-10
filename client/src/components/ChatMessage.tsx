@@ -32,10 +32,33 @@ export default class ChatMessage extends React.Component<StoreModels.ChatMessage
     );
   }
 
+  renderUserJoinOrLeave = () => {
+    return (
+      <React.Fragment>
+        <span className="tag is-danger is-light">{this.props.user.userName}</span>
+        <span>{' '}</span>
+        <span className="tag is-success is-light">{` ${this.props.message}`}</span>
+      </React.Fragment>
+    );
+  }
+
   render() {
+    let renderMethod;
+    switch(this.props.type) {
+      case StoreModels.ChatMessageType.media:
+        renderMethod = this.renderPlaylistItemAdded;
+        break;
+      case StoreModels.ChatMessageType.room:
+        renderMethod = this.renderUserJoinOrLeave;
+        break;
+      case StoreModels.ChatMessageType.message:
+      default:
+        renderMethod = this.renderMessage;
+        break;
+    }
     return (
       <div className="chatMessage">
-        {this.isPlaylistItemAddedMessage() ? this.renderPlaylistItemAdded() : this.renderMessage()}
+        {renderMethod()}
       </div>
     )
   }

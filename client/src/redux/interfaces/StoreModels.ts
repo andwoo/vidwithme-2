@@ -31,8 +31,15 @@ export interface RoomError {
   description: string;
 }
 
+export enum ChatMessageType {
+  message,
+  media,
+  room
+}
+
 export interface ChatMessage {
   user : UserState;
+  type: ChatMessageType;
   message: string;
 }
 
